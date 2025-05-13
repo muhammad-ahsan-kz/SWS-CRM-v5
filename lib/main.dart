@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sws_crm_v5/home_page.dart';
+import 'package:sws_crm_v5/views/home_page.dart';
 
 void main() {
   runApp(const MyApp());
