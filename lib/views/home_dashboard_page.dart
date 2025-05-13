@@ -120,10 +120,12 @@ class HomeDashboardPage extends StatelessWidget {
                         icon: Icon(buttonIcon),
                         label: Text(buttonText),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.royalBlue,
-                          foregroundColor: Colors.white,
+                          backgroundColor: AppColors.white,
+                          foregroundColor: AppColors.darkGreenText,
+
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(20),
+                            side: BorderSide(color: AppColors.boxBorder),
                           ),
                         ),
                       ),
@@ -178,7 +180,7 @@ class HomeDashboardPage extends StatelessWidget {
                             child: ListTile(
                               leading: Icon(
                                 Icons.subdirectory_arrow_right,
-                                color: AppColors.royalBlue,
+                                color: AppColors.darkGreenIcon,
                               ),
                               title: Text(item['title']),
                               trailing: Row(
@@ -260,7 +262,7 @@ class HomeDashboardPage extends StatelessWidget {
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.royalBlue,
+                backgroundColor: AppColors.darkGreenIcon,
                 foregroundColor: Colors.white,
               ),
               child: Text('Save'),
