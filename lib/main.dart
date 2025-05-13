@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sws_crm_v5/views/home_page.dart';
+import 'package:sws_crm_v5/utils/routes/routes_config.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,10 +10,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-     
-      home: HomePage(),
+      routerConfig: MyAppRouter().router,
     );
-  } 
+  }
 }
