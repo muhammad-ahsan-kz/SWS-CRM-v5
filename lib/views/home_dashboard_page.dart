@@ -89,6 +89,7 @@ class HomeDashboardPage extends StatelessWidget {
     return Card(
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      shadowColor: AppColors.background,
       child: Container(
         padding: const EdgeInsets.all(15),
         height: containerHeight < 300 ? 350 : containerHeight,
