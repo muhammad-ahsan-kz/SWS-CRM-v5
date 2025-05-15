@@ -21,7 +21,7 @@ class AppbarWidget extends StatelessWidget {
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.boxBorder),
+                    border: Border.all(color: AppColors.greenBorder),
                   ),
                   child: Icon(
                     Icons.app_registration,
@@ -61,7 +61,7 @@ class AppbarWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.lightGreen.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(25),
-        border: Border.all(color: AppColors.boxBorder),
+        border: Border.all(color: AppColors.greenBorder),
       ),
       child: Row(
         children: [
@@ -148,7 +148,7 @@ class AppbarWidget extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
 
-          border: Border.all(color: AppColors.boxBorder),
+          border: Border.all(color: AppColors.greenBorder),
         ),
         child: Icon(Icons.person, color: AppColors.darkGreenIcon),
       ),

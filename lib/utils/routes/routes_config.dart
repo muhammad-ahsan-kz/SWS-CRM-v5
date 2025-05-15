@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sws_crm_v5/models/customers_list_model.dart';
 import 'package:sws_crm_v5/utils/routes/route_names.dart';
 import 'package:sws_crm_v5/views/about_page.dart';
 import 'package:sws_crm_v5/views/app_settings_page.dart';
+import 'package:sws_crm_v5/views/customer_dashboard_page.dart';
+import 'package:sws_crm_v5/views/customer_project_details_page.dart';
 import 'package:sws_crm_v5/views/customers_page.dart';
 import 'package:sws_crm_v5/views/error_Page.dart';
 import 'package:sws_crm_v5/views/events_page.dart';
@@ -97,6 +100,27 @@ class MyAppRouter {
             path: RouteNames.aboutPage,
             pageBuilder: (context, state) {
               return MaterialPage(child: AboutPage());
+            },
+          ),
+          GoRoute(
+            name: RouteNames.customerDashboardPage,
+            path: RouteNames.customerDashboardPage,
+            pageBuilder: (context, state) {
+              // final customer = state.extra as CustomersListModel;
+              return MaterialPage(
+                child: CustomerDashboardPage(),
+                // child: CustomerDashboardPage(customerDetails: customer),
+              );
+            },
+          ),
+          GoRoute(
+            name: RouteNames.customerProjectDetailsPage,
+            path: RouteNames.customerProjectDetailsPage,
+            pageBuilder: (context, state) {
+              final projectName = state.name as String;
+              return MaterialPage(
+                child: CustomerProjectDetailsPage(projectName: projectName),
+              );
             },
           ),
         ],

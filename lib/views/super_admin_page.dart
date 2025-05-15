@@ -145,7 +145,9 @@ class _SuperAdminPageState extends State<SuperAdminPage> {
                   children: [
                     ButtonWidget(
                       title: 'Add',
-                      onTap: () {},
+                      onTap: () {
+                        showCustomDialog(context: context, subMenuName: 'Add');
+                      },
                       isIconShown: true,
                       textSize: 15,
                       iconSize: 18,
@@ -180,6 +182,7 @@ class _SuperAdminPageState extends State<SuperAdminPage> {
                   TableWidget(
                     columnNamesList: ['Name'],
                     rowsValuesList: rowsValuesList,
+                    columnSizes: [screenWidth * 0.10],
                     tableWidth: screenWidth * 0.7,
                     tableHeight: screenHeight * 0.6,
                   )
@@ -196,9 +199,11 @@ class _SuperAdminPageState extends State<SuperAdminPage> {
                         TableWidget(
                           columnNamesList: ['Name'],
                           rowsValuesList: rowsValuesList,
+                          columnSizes: [screenWidth * 0.10],
                           tableWidth: screenWidth * 0.7,
                           tableHeight: screenHeight * 0.6,
                           rowTopBottomPadding: 0,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           actionBuilder: (rowData, index) {
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -228,6 +233,7 @@ class _SuperAdminPageState extends State<SuperAdminPage> {
                   TableWidget(
                     columnNamesList: ['Name'],
                     rowsValuesList: rowsValuesList,
+                    columnSizes: [screenWidth * 0.10],
                     tableWidth: screenWidth * 0.7,
                     tableHeight: screenHeight * 0.6,
                   ),
@@ -284,7 +290,7 @@ class _SuperAdminPageState extends State<SuperAdminPage> {
                             selectedMenuIndex == index
                                 ? AppColors.background
                                 : AppColors.white,
-                        border: Border.all(color: AppColors.boxBorder),
+                        border: Border.all(color: AppColors.greenBorder),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(

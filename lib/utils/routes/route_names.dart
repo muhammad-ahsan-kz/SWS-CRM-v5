@@ -5,6 +5,8 @@ class RouteNames {
   static const String superAdminPage = '/super-admin';
   static const String appSettingsPage = '/app-settings';
   static const String customersPage = '/customers';
+  static const String customerDashboardPage = '/customer-dashboard';
+  static const String customerProjectDetailsPage = '/customer-project-details';
   static const String productionPage = '/production';
   static const String eventsPage = '/events';
   static const String reportsPage = '/reports';

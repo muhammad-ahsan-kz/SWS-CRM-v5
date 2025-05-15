@@ -96,6 +96,7 @@ class HomeDashboardPage extends StatelessWidget {
         width: containerWidth < 400 ? 450 : containerWidth,
         decoration: BoxDecoration(
           color: AppColors.white,
+          border: Border.all(color: AppColors.greenBorder),
           borderRadius: BorderRadius.circular(15),
         ),
         child: Column(
@@ -126,7 +127,7 @@ class HomeDashboardPage extends StatelessWidget {
 
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
-                            side: BorderSide(color: AppColors.boxBorder),
+                            side: BorderSide(color: AppColors.greenBorder),
                           ),
                         ),
                       ),

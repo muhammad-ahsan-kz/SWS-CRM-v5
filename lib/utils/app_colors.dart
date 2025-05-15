@@ -18,14 +18,17 @@ class AppColors {
   static const Color lightGreenIcon = Color(0xFF73946B);
 
   // Box Border Colors
-  static const Color boxBorder = Color(0xFF537D5D);
+  static const Color greenBorder = Color(0xFF537D5D);
+  static const Color greyBorder = Color(0xFF9E9E9E);
 
   // Background Colors
   static const Color background = Color(0xFF537D5D);
+  static const Color greyBackground = Color(0xFF9E9E9E);
 
   // General Colors
   static const Color red = Colors.red;
   static const Color black = Colors.black;
   static const Color redAccent = Colors.redAccent;
   static const Color transparent = Colors.transparent;
+  static const Color grey = Colors.grey;
 }
