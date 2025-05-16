@@ -1,22 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:sws_crm_v5/models/add_customer_model.dart';
 import 'package:sws_crm_v5/models/customers_list_model.dart';
 import 'package:sws_crm_v5/utils/routes/route_names.dart';
+import 'package:sws_crm_v5/view%20models/customer_dashboard_page_view_model.dart';
 import 'package:sws_crm_v5/widgets/button_widget.dart';
 import 'package:sws_crm_v5/widgets/dialog_box_widget.dart';
+import 'package:sws_crm_v5/widgets/future_builder_widget.dart';
 import 'package:sws_crm_v5/widgets/icon_button_widget.dart';
 
 import '../utils/app_colors.dart';
 
-class CustomerDashboardPage extends StatelessWidget {
-  // final CustomersListModel customerDetails;
-  const CustomerDashboardPage({
-    super.key,
-    //  required this.customerDetails
-  });
+class CustomerDashboardPage extends StatefulWidget {
+  final String customerId;
+  const CustomerDashboardPage({super.key, required this.customerId});
 
   @override
+  State<CustomerDashboardPage> createState() => _CustomerDashboardPageState();
+}
+
+class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
+  final PageController pageController = PageController();
+  int currentPage = 0;
+  @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<CustomerDashboardPageViewModel>(
+      context,
+      listen: false,
+    );
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -26,12 +38,21 @@ class CustomerDashboardPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildCustomerHeader(),
+              _buildCustomerHeader(
+                parentContext: context,
+                pageController: pageController,
+                currentPage: currentPage,
+                viewModel: viewModel,
+              ),
               const SizedBox(height: 30),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildCustomerDetails(screenHeight, screenWidth),
+                  _buildCustomerDetails(
+                    screenHeight: screenHeight,
+                    screenWidth: screenWidth,
+                    viewModel: viewModel,
+                  ),
                   _buildCustomerProjects(context, screenHeight, screenWidth),
                 ],
               ),
@@ -43,7 +64,12 @@ class CustomerDashboardPage extends StatelessWidget {
   }
 
   // Customer Dashboard Header
-  Widget _buildCustomerHeader() {
+  Widget _buildCustomerHeader({
+    required BuildContext parentContext,
+    required PageController pageController,
+    required int currentPage,
+    required CustomerDashboardPageViewModel viewModel,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -58,21 +84,39 @@ class CustomerDashboardPage extends StatelessWidget {
                 color: AppColors.primaryGreen,
               ),
             ),
-            Text(
-              'Welcome back Trygge Toven',
-              // 'Welcome back ${customerDetails.fullName}',
-              style: TextStyle(
-                fontSize: 12,
-                // fontWeight: FontWeight.bold,
-                color: AppColors.lightGreen,
+            FutureBuilderWidget(
+              future: viewModel.fetchCustomerDetails(
+                customerId: widget.customerId,
               ),
+              builder: (context, snapshot) {
+                return Text(
+                  'Welcome back ${snapshot!['firstName']} ${snapshot['lastName']}',
+                  // 'Welcome back ${customerDetails.fullName}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    // fontWeight: FontWeight.bold,
+                    color: AppColors.lightGreen,
+                  ),
+                );
+              },
             ),
           ],
         ),
         Row(
           spacing: 10,
           children: [
-            IconButtonWidget(icon: Icons.add_circle_outline, padding: 5),
+            IconButtonWidget(
+              icon: Icons.add_circle_outline,
+              padding: 5,
+              ontap: () {
+                // Dialog Box
+                addNewProjectDialogBox(
+                  parentContext: parentContext,
+                  pageController: pageController,
+                  currentPage: currentPage,
+                );
+              },
+            ),
             IconButtonWidget(
               icon: Icons.insert_drive_file_outlined,
               padding: 5,
@@ -101,61 +145,11 @@ class CustomerDashboardPage extends StatelessWidget {
   }
 
   // Customer Dashboard Details Box
-  // Widget _buildCustomerDetails() {
-  //   return Card(
-  //     elevation: 8,
-  //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-  //     child: Container(
-  //       width: 400,
-  //       padding: const EdgeInsets.all(24),
-  //       decoration: BoxDecoration(
-  //         gradient: LinearGradient(
-  //           colors: [AppColors.white, Colors.green.shade100],
-  //           begin: Alignment.topLeft,
-  //           end: Alignment.bottomRight,
-  //         ),
-  //         borderRadius: BorderRadius.circular(20),
-  //       ),
-  //       child: Column(
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: [
-  //           _buildRow('Customer ID', '3fe887d3'),
-  //           _buildRow('Full Name', 'Trygge Toven'),
-  //           _buildRow(
-  //             'Address',
-  //             '11540 Cumpston St, North Hollywood, CA 91601, USA',
-  //           ),
-  //           _buildRow('Phone', '2536779841'),
-  //           _buildRow('Email', 'ttoven@gmail.com'),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildRow(String label, String value) {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(vertical: 8),
-  //     child: RichText(
-  //       text: TextSpan(
-  //         style: const TextStyle(fontSize: 16, color: Colors.black),
-  //         children: [
-  //           TextSpan(
-  //             text: '$label: ',
-  //             style: const TextStyle(
-  //               fontWeight: FontWeight.bold,
-  //               color: Colors.teal,
-  //             ),
-  //           ),
-  //           TextSpan(text: value),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // Customer Dashboard Details Box
-  Widget _buildCustomerDetails(double screenHeight, double screenWidth) {
+  Widget _buildCustomerDetails({
+    required double screenHeight,
+    required double screenWidth,
+    required CustomerDashboardPageViewModel viewModel,
+  }) {
     return Material(
       elevation: 5,
       borderRadius: BorderRadius.only(
@@ -167,14 +161,6 @@ class CustomerDashboardPage extends StatelessWidget {
         width: screenWidth * 0.15,
         padding: EdgeInsets.all(15),
         decoration: BoxDecoration(
-          // gradient: LinearGradient(
-          //   colors: [
-          //     AppColors.lightGreen.withValues(alpha: .3),
-          //     AppColors.lightGreen2.withValues(alpha: .3),
-          //   ],
-          //   begin: Alignment.topLeft,
-          //   end: Alignment.bottomRight,
-          // ),
           color: AppColors.white,
           border: Border.all(color: AppColors.greyBorder),
           // borderRadius: BorderRadius.circular(15),
@@ -183,97 +169,88 @@ class CustomerDashboardPage extends StatelessWidget {
             bottomLeft: Radius.circular(15),
           ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Customer details',
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.end,
-              style: TextStyle(
-                color: AppColors.primaryGreen,
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Divider(),
-            _buildDetailsRow(
-              title: 'Customer Id',
-              // value: customerDetails.customerId,
-              value: '3fe887d3',
-            ),
-            _buildDetailsRow(
-              title: 'Full Name',
-              // value: customerDetails.fullName,
-              value: 'Trygge Toven',
-            ),
-            _buildDetailsRow(
-              title: 'Address',
-              //  value: customerDetails.address
-              value: '11540 Cumpston St, North Hollywood, CA 91601, USA',
-            ),
-            _buildDetailsRow(
-              title: 'Phone',
-              //  value: customerDetails.phone
-              value: '2536779841',
-            ),
-            _buildDetailsRow(
-              title: 'Email',
-              // value: customerDetails.email
-              value: 'ttoven@gmail.com',
-            ),
-            SizedBox(height: 30),
-            Text(
-              'Actions',
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.end,
-              style: TextStyle(
-                color: AppColors.primaryGreen,
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Divider(),
-            SizedBox(height: 10),
-            Wrap(
-              spacing: 10,
-              runSpacing: 10,
+        child: FutureBuilderWidget(
+          future: viewModel.fetchCustomerDetails(customerId: widget.customerId),
+          builder: (context, snapshot) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildActionsRow(
-                  icon: Icons.note_outlined,
-                  title: 'Notes',
-                  onTap: () {
-                    DialogBoxWidget(
+                Text(
+                  'Customer details',
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.end,
+                  style: TextStyle(
+                    color: AppColors.primaryGreen,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Divider(),
+                _buildDetailsRow(
+                  title: 'Customer Id',
+                  value: widget.customerId,
+                ),
+                _buildDetailsRow(
+                  title: 'Full Name',
+                  value: '${snapshot!['firstName']} ${snapshot['lastName']}',
+                ),
+                _buildDetailsRow(title: 'Address', value: snapshot['address']),
+                _buildDetailsRow(title: 'Phone', value: snapshot['phone']),
+                _buildDetailsRow(title: 'Email', value: snapshot['email']),
+                SizedBox(height: 30),
+                Text(
+                  'Actions',
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.end,
+                  style: TextStyle(
+                    color: AppColors.primaryGreen,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Divider(),
+                SizedBox(height: 10),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: [
+                    _buildActionsRow(
+                      icon: Icons.note_outlined,
                       title: 'Notes',
-                      onSave: () {},
-                      onCancel: () {},
-                      child: Column(children: []),
-                    );
-                  },
-                ),
-                _buildActionsRow(
-                  icon: Icons.edit_outlined,
-                  title: 'Edit',
-                  onTap: () {},
-                ),
-                _buildActionsRow(
-                  icon: Icons.delete_outline,
-                  title: 'Delete',
-                  onTap: () {},
-                ),
-                _buildActionsRow(
-                  icon: Icons.file_copy_outlined,
-                  title: 'Files',
-                  onTap: () {},
-                ),
-                _buildActionsRow(
-                  icon: Icons.dashboard_customize_outlined,
-                  title: 'New Project',
-                  onTap: () {},
+                      onTap: () {
+                        // DialogBoxWidget(
+                        //   title: 'Notes',
+                        //   onSave: () {},
+                        //   onCancel: () {},
+                        //   child: Column(children: []),
+                        // );
+                      },
+                    ),
+                    _buildActionsRow(
+                      icon: Icons.edit_outlined,
+                      title: 'Edit',
+                      onTap: () {},
+                    ),
+                    _buildActionsRow(
+                      icon: Icons.delete_outline,
+                      title: 'Delete',
+                      onTap: () {},
+                    ),
+                    _buildActionsRow(
+                      icon: Icons.file_copy_outlined,
+                      title: 'Files',
+                      onTap: () {},
+                    ),
+                    _buildActionsRow(
+                      icon: Icons.dashboard_customize_outlined,
+                      title: 'New Project',
+                      onTap: () {},
+                    ),
+                  ],
                 ),
               ],
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
@@ -454,4 +431,121 @@ class CustomerDashboardPage extends StatelessWidget {
       ),
     ),
   );
+
+  // Add new customer dialog box
+  Future<void> addNewProjectDialogBox({
+    required BuildContext parentContext,
+    required PageController pageController,
+    required int currentPage,
+  }) {
+    final TextEditingController firstNameController = TextEditingController();
+    final TextEditingController lastNameController = TextEditingController();
+    final TextEditingController secondaryNameController =
+        TextEditingController();
+    final TextEditingController secondaryLastNameController =
+        TextEditingController();
+    final TextEditingController phoneController = TextEditingController();
+    final TextEditingController mobileController = TextEditingController();
+    final TextEditingController addressController = TextEditingController();
+    final TextEditingController unitController = TextEditingController();
+    final TextEditingController emailController = TextEditingController();
+
+    return DialogBoxWidget.show(
+      parentContext: parentContext,
+      title: 'Add New Project',
+      content: _buildTwoPages(
+        parentContext: parentContext,
+        pageController: pageController,
+        currentPage1: currentPage,
+      ),
+      onSave: () async {
+        final customerDetails = AddCustomerModel(
+          firstName: firstNameController.text,
+          lastName: lastNameController.text,
+          secondaryName: secondaryNameController.text,
+          secondaryLastName: secondaryLastNameController.text,
+          phone: phoneController.text,
+          mobile: mobileController.text,
+          address: addressController.text,
+          unit: unitController.text,
+          email: emailController.text,
+        );
+        final viewModel = Provider.of<CustomerDashboardPageViewModel>(
+          parentContext,
+          listen: false,
+        );
+        // await viewModel.addCustomerProject(
+        //   projectDetails: projectDetails.toJson(),
+        // );
+      },
+    );
+  }
+
+  // Two Pages for dialog box
+  Widget _buildTwoPages({
+    required BuildContext parentContext,
+    required PageController pageController,
+    required int currentPage1,
+  }) {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        int currentPage = 0;
+
+        pageController.addListener(() {
+          final newPage = pageController.page?.round() ?? 0;
+          if (newPage != currentPage) {
+            setState(() => currentPage = newPage);
+          }
+        });
+        return Column(
+          children: [
+            SizedBox(
+              height: 300,
+              child: PageView(
+                controller: pageController,
+                onPageChanged: (index) => setState(() => currentPage = index),
+                children: [
+                  Column(
+                    children: [
+                      Expanded(child: Container(color: AppColors.primaryGreen)),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Expanded(
+                        child: Container(color: AppColors.secondaryGreen),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                if (currentPage > 0)
+                  ElevatedButton(
+                    onPressed:
+                        () => pageController.previousPage(
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        ),
+                    child: Text('Back'),
+                  ),
+                if (currentPage < 1)
+                  ElevatedButton(
+                    onPressed:
+                        () => pageController.nextPage(
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        ),
+                    child: Text('Next'),
+                  ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

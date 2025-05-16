@@ -153,7 +153,7 @@ class _ProductionPageState extends State<ProductionPage> {
                     optionsList[selectedSubMenuItem!] == null))
                   TableWidget(
                     columnNamesList: ['Name'],
-                    rowsValuesList: rowsValuesList,
+                    rowValuesList: rowsValuesList,
                     columnSizes: [screenWidth * 0.10],
                     tableWidth: screenWidth * 0.7,
                     tableHeight: screenHeight * 0.6,
@@ -170,7 +170,7 @@ class _ProductionPageState extends State<ProductionPage> {
                         // SizedBox(height: 10),
                         TableWidget(
                           columnNamesList: ['Name'],
-                          rowsValuesList: rowsValuesList,
+                          rowValuesList: rowsValuesList,
                           columnSizes: [screenWidth * 0.10],
                           tableWidth: screenWidth * 0.7,
                           tableHeight: screenHeight * 0.6,
@@ -204,7 +204,7 @@ class _ProductionPageState extends State<ProductionPage> {
                 else
                   TableWidget(
                     columnNamesList: ['Name'],
-                    rowsValuesList: rowsValuesList,
+                    rowValuesList: rowsValuesList,
                     columnSizes: [screenWidth * 0.10],
                     tableWidth: screenWidth * 0.7,
                     tableHeight: screenHeight * 0.6,

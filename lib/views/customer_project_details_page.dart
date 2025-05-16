@@ -306,12 +306,12 @@ class CustomerProjectDetailsPage extends StatelessWidget {
                   icon: Icons.note_outlined,
                   title: 'Notes',
                   onTap: () {
-                    DialogBoxWidget(
-                      title: 'Notes',
-                      onSave: () {},
-                      onCancel: () {},
-                      child: Column(children: []),
-                    );
+                    // DialogBoxWidget(
+                    //   title: 'Notes',
+                    //   onSave: () {},
+                    //   onCancel: () {},
+                    //   child: Column(children: []),
+                    // );
                   },
                 ),
                 _buildActionsRow(

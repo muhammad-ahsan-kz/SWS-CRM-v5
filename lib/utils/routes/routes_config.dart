@@ -106,10 +106,10 @@ class MyAppRouter {
             name: RouteNames.customerDashboardPage,
             path: RouteNames.customerDashboardPage,
             pageBuilder: (context, state) {
-              // final customer = state.extra as CustomersListModel;
+              final String customerId =
+                  state.uri.queryParameters['customerId']!;
               return MaterialPage(
-                child: CustomerDashboardPage(),
-                // child: CustomerDashboardPage(customerDetails: customer),
+                child: CustomerDashboardPage(customerId: customerId),
               );
             },
           ),

@@ -181,7 +181,7 @@ class _SuperAdminPageState extends State<SuperAdminPage> {
                     optionsList[selectedSubMenuItem!] == null))
                   TableWidget(
                     columnNamesList: ['Name'],
-                    rowsValuesList: rowsValuesList,
+                    rowValuesList: rowsValuesList,
                     columnSizes: [screenWidth * 0.10],
                     tableWidth: screenWidth * 0.7,
                     tableHeight: screenHeight * 0.6,
@@ -198,7 +198,7 @@ class _SuperAdminPageState extends State<SuperAdminPage> {
                         // SizedBox(height: 10),
                         TableWidget(
                           columnNamesList: ['Name'],
-                          rowsValuesList: rowsValuesList,
+                          rowValuesList: rowsValuesList,
                           columnSizes: [screenWidth * 0.10],
                           tableWidth: screenWidth * 0.7,
                           tableHeight: screenHeight * 0.6,
@@ -232,7 +232,7 @@ class _SuperAdminPageState extends State<SuperAdminPage> {
                 else
                   TableWidget(
                     columnNamesList: ['Name'],
-                    rowsValuesList: rowsValuesList,
+                    rowValuesList: rowsValuesList,
                     columnSizes: [screenWidth * 0.10],
                     tableWidth: screenWidth * 0.7,
                     tableHeight: screenHeight * 0.6,

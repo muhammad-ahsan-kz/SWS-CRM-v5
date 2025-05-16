@@ -1,59 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:sws_crm_v5/utils/app_colors.dart';
 
-class DialogBoxWidget extends StatefulWidget {
+class DialogBoxWidget extends StatelessWidget {
   final String title;
-  final Widget child;
+  final Widget content;
   final VoidCallback onSave;
-  final VoidCallback onCancel;
+  final double dialogBoxHeight;
+  final double dialogBoxWidth;
+
   const DialogBoxWidget({
     super.key,
     required this.title,
-    required this.child,
+    required this.content,
     required this.onSave,
-    required this.onCancel,
+    this.dialogBoxHeight = 600,
+    this.dialogBoxWidth = 500,
   });
 
   @override
-  State<DialogBoxWidget> createState() => _DialogBoxWidgetState();
-}
-
-class _DialogBoxWidgetState extends State<DialogBoxWidget> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext dialogBoxContext) {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       title: Text(
-        widget.title,
-        style: TextStyle(
-          color: AppColors.primaryGreen,
+        title,
+        style: const TextStyle(
+          color: AppColors.darkGreenText,
           fontWeight: FontWeight.bold,
         ),
       ),
-      content: SizedBox(width: 400, child: widget.child),
+      content: SizedBox(
+        height: dialogBoxHeight,
+        width: dialogBoxWidth,
+        child: SingleChildScrollView(child: content),
+      ),
       actions: [
         TextButton(
-          onPressed: () {
-            widget.onCancel();
-            Navigator.of(context).pop();
-          },
-          child: Text(
+          onPressed: () => Navigator.of(dialogBoxContext).pop(),
+          child: const Text(
             'Cancel',
-            style: TextStyle(color: AppColors.secondaryGreen),
+            style: TextStyle(color: AppColors.darkGreenText),
           ),
         ),
         ElevatedButton(
           onPressed: () {
-            widget.onSave();
-            Navigator.of(context).pop();
+            onSave();
+            Navigator.of(dialogBoxContext).pop();
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.darkGreenIcon,
-            foregroundColor: Colors.white,
+            backgroundColor: AppColors.background,
+            foregroundColor: AppColors.white,
           ),
           child: const Text('Save'),
         ),
       ],
+    );
+  }
+
+  /// Static method to show the dialog from anywhere
+  static Future<void> show({
+    required BuildContext parentContext,
+    required String title,
+    required Widget content,
+    required VoidCallback onSave,
+  }) {
+    return showDialog(
+      context: parentContext,
+      builder:
+          (ctx) =>
+              DialogBoxWidget(title: title, content: content, onSave: onSave),
     );
   }
 }
