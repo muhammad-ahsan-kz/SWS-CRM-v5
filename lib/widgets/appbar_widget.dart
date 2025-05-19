@@ -1,8 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sws_crm_v5/utils/app_colors.dart';
+import 'package:sws_crm_v5/utils/routes/route_names.dart';
 
 class AppbarWidget extends StatelessWidget {
   const AppbarWidget({super.key});
+
+  Future<void> logout(BuildContext context) async {
+    FirebaseAuth.instance.signOut();
+    context.goNamed(RouteNames.loginPage);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +51,7 @@ class AppbarWidget extends StatelessWidget {
               children: [
                 _buildSearchBar(),
                 SizedBox(width: 15),
-                _buildProfilePhoto(),
+                _buildProfilePhoto(context),
               ],
             ),
           ],
@@ -94,7 +102,7 @@ class AppbarWidget extends StatelessWidget {
   }
 
   // Right Profile Photo
-  Widget _buildProfilePhoto() {
+  Widget _buildProfilePhoto(BuildContext context) {
     final String email = 'ahsanshahidkhanzada@gmail.com';
     return // Right Side: PopupMenuButton
     PopupMenuButton<String>(
@@ -105,6 +113,7 @@ class AppbarWidget extends StatelessWidget {
           // print('Go to Profile');
           // Navigate to profile screen or show a dialog
         } else if (value == 'logout') {
+          logout(context);
           // print('Logging out...');
           // Handle logout logic
         }

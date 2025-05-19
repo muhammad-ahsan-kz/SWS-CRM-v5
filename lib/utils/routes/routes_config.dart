@@ -11,34 +11,119 @@ import 'package:sws_crm_v5/views/error_Page.dart';
 import 'package:sws_crm_v5/views/events_page.dart';
 import 'package:sws_crm_v5/views/help_page.dart';
 import 'package:sws_crm_v5/views/home_dashboard_page.dart';
+import 'package:sws_crm_v5/views/home_event_notifications_page.dart';
+import 'package:sws_crm_v5/views/home_favourites_menu_page.dart';
+import 'package:sws_crm_v5/views/home_favourites_projects_page.dart';
+import 'package:sws_crm_v5/views/home_message_box_page.dart';
+import 'package:sws_crm_v5/views/home_notification_page.dart';
 import 'package:sws_crm_v5/views/home_page.dart';
+import 'package:sws_crm_v5/views/home_tasks_page.dart';
+import 'package:sws_crm_v5/views/login_page.dart';
 import 'package:sws_crm_v5/views/my_profile_page.dart';
 import 'package:sws_crm_v5/views/production_page.dart';
 import 'package:sws_crm_v5/views/reports_page.dart';
+import 'package:sws_crm_v5/views/super_admin_dropdowns_page.dart';
 import 'package:sws_crm_v5/views/super_admin_page.dart';
 import 'package:sws_crm_v5/views/trouble_shooting_page.dart';
 
 class MyAppRouter {
   GoRouter router = GoRouter(
-    initialLocation: RouteNames.homeDashboardPage,
+    initialLocation: '/home',
     routes: [
+      // Login screen
+      GoRoute(
+        name: RouteNames.loginPage,
+        path: '/login',
+        builder: (context, state) => LoginPage(),
+      ),
+      GoRoute(
+        name: RouteNames.homePage,
+        path: '/home',
+        pageBuilder: (context, state) {
+          return MaterialPage(child: HomePage(child: HomeDashboardPage()));
+        },
+      ),
+      GoRoute(
+        name: RouteNames.errorPage,
+        path: '/error',
+        pageBuilder: (context, state) {
+          return MaterialPage(child: ErrorPage());
+        },
+      ),
       ShellRoute(
         builder: (context, state, child) => HomePage(child: child),
         routes: [
+          // Home and its nested screens
           GoRoute(
             name: RouteNames.homeDashboardPage,
-            path: RouteNames.homeDashboardPage,
+            path: '/dashboard',
             pageBuilder: (context, state) {
               return MaterialPage(child: HomeDashboardPage());
             },
           ),
           GoRoute(
+            name: RouteNames.homeFavouritesMenuPage,
+            path: '/favourites-menu',
+            pageBuilder: (context, state) {
+              return MaterialPage(child: HomeFavouritesMenuPage());
+            },
+          ),
+          GoRoute(
+            name: RouteNames.homeFavouriteProjectsPage,
+            path: '/favourite-projects',
+            pageBuilder: (context, state) {
+              return MaterialPage(child: HomeFavouritesProjectsPage());
+            },
+          ),
+
+          GoRoute(
+            name: RouteNames.homeNotificationsPage,
+            path: '/notifications',
+            pageBuilder: (context, state) {
+              return MaterialPage(child: HomeNotificationPage());
+            },
+          ),
+          GoRoute(
+            name: RouteNames.homeMessageBoxPage,
+            path: '/message-box',
+            pageBuilder: (context, state) {
+              return MaterialPage(child: HomeMessageBoxPage());
+            },
+          ),
+          GoRoute(
+            name: RouteNames.homeEventNotificationsPage,
+            path: '/event-notifications',
+            pageBuilder: (context, state) {
+              return MaterialPage(child: HomeEventNotificationsPage());
+            },
+          ),
+          GoRoute(
+            name: RouteNames.homeTasksPage,
+            path: '/tasks',
+            pageBuilder: (context, state) {
+              return MaterialPage(child: HomeTasksPage());
+            },
+          ),
+
+          // Super Admin and its nested screens
+          GoRoute(
             name: RouteNames.superAdminPage,
-            path: RouteNames.superAdminPage,
+            path: '/super-admin',
             pageBuilder: (context, state) {
               return MaterialPage(child: SuperAdminPage());
             },
+            routes: [
+              GoRoute(
+                name: RouteNames.superAdminDropdownsPage,
+                path: '/super-admin-dropdowns',
+                pageBuilder: (context, state) {
+                  return MaterialPage(child: SuperAdminDropdownsPage());
+                },
+              ),
+            ],
           ),
+
+          // App Setting and its nested screens
           GoRoute(
             name: RouteNames.appSettingsPage,
             path: RouteNames.appSettingsPage,
@@ -117,20 +202,13 @@ class MyAppRouter {
             name: RouteNames.customerProjectDetailsPage,
             path: RouteNames.customerProjectDetailsPage,
             pageBuilder: (context, state) {
-              final projectName = state.name as String;
+              final projectName = state.uri.queryParameters['projectName'];
               return MaterialPage(
-                child: CustomerProjectDetailsPage(projectName: projectName),
+                child: CustomerProjectDetailsPage(projectName: projectName!),
               );
             },
           ),
         ],
-      ),
-      GoRoute(
-        name: RouteNames.homePage,
-        path: RouteNames.homePage,
-        pageBuilder: (context, state) {
-          return MaterialPage(child: HomePage(child: HomeDashboardPage()));
-        },
       ),
     ],
 

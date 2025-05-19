@@ -6,268 +6,176 @@ class HomeDashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Align(
-            alignment: Alignment.topLeft,
-            child: Text(
-              'Dashboard',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryGreen,
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
+    final List<String> dummyFavouritesMenuList = [
+      'Dropdowns',
+      'Branches',
+      'Project 5',
+    ];
+    final List<String> dummyFavouriteProjectsList = [
+      'CRM Redesign',
+      'Marketing Site Revamp',
+      'Internal Tools',
+      'Mobile App UI',
+      'Food Delivery System',
+      'VsCode',
+      'Android Studio',
+      'Postman',
+    ];
 
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            // alignment: WrapAlignment.center,
-            children: [
-              _buildCustomCard(
-                context: context,
-                title: 'Favorites Menu',
-                isButtonDefined: true,
-                itemsList: [
-                  {'title': 'Dropdowns'},
-                  {'title': 'Items'},
-                ],
-              ),
-              _buildCustomCard(
-                context: context,
-                title: 'Favorites Projects',
-                itemsList: [],
-              ),
-              _buildCustomCard(
-                context: context,
-                title: 'Notifications',
-                isButtonDefined: true,
-                buttonIcon: Icons.history,
-                buttonText: 'History',
-                itemsList: [],
-              ),
-              _buildCustomCard(
-                context: context,
-                title: 'Message Box',
-                itemsList: [],
-              ),
-              _buildCustomCard(
-                context: context,
-                title: 'Event Notifications',
-                containerHeight: 600,
-                itemsList: [],
-              ),
-              _buildCustomCard(
-                context: context,
-                title: 'Tasks',
-                isButtonDefined: true,
-                containerHeight: 600,
-                itemsList: [],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+    final List<String> dummyNotificationsList = [
+      'New user registered',
+      'Password changed successfully',
+      'Project deadline extended',
+      'Database backup completed',
+      'New message from admin',
+      'Weekly summary is ready',
+      'Role permissions updated',
+      'Server maintenance scheduled',
+      'New document uploaded',
+      'Task "UI Design" marked complete',
+      'Login from new device detected',
+      'Zip code list updated',
+      'New feedback received',
+      'Side menu updated',
+      'System settings changed',
+    ];
 
-  // Card
-  Widget _buildCustomCard({
-    required BuildContext context,
-    required String title,
-    double containerHeight = 350,
-    double containerWidth = 450,
-    bool isButtonDefined = false,
-    String buttonText = 'Add',
-    IconData buttonIcon = Icons.add,
-    required List<Map<String, dynamic>> itemsList,
-    // VoidCallback  onButtonTap = (){},
-  }) {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      shadowColor: AppColors.background,
-      child: Container(
-        padding: const EdgeInsets.all(15),
-        height: containerHeight < 300 ? 350 : containerHeight,
-        width: containerWidth < 400 ? 450 : containerWidth,
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          border: Border.all(color: AppColors.greenBorder),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return LayoutBuilder(
+      builder: (context, constraits) {
+        final double screenHeight = constraits.maxHeight;
+        final double screenWidth = constraits.maxWidth;
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            /// Header
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primaryGreen,
-                  ),
-                ),
-                Row(
-                  children: [
-                    if (isButtonDefined)
-                      ElevatedButton.icon(
-                        onPressed: () => showCustomDialog(context),
-                        icon: Icon(buttonIcon),
-                        label: Text(buttonText),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.white,
-                          foregroundColor: AppColors.darkGreenText,
-
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            side: BorderSide(color: AppColors.greenBorder),
+            // Favourites Menu, Projects and Message Box
+            Container(
+              height: screenHeight,
+              width: screenWidth * 0.45,
+              decoration: BoxDecoration(),
+              child: Column(
+                children: [
+                  // Column child row
+                  SizedBox(
+                    height: screenHeight * 0.45,
+                    child: Row(
+                      children: [
+                        // Favourites Menu
+                        Container(
+                          height: screenHeight * 0.5,
+                          width: screenWidth * 0.20,
+                          decoration: BoxDecoration(),
+                          child: Column(
+                            children: [
+                              _buildMenuTitle(
+                                icon: Icons.star_outline,
+                                title: 'Favourites Menu',
+                              ),
+                              _buildListItems(
+                                itemsList: dummyFavouritesMenuList,
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                    const SizedBox(width: 8),
-                    IconButton(
-                      icon: Icon(Icons.check_box),
-                      onPressed: () {},
-                      color: AppColors.secondaryGreen,
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.filter_list),
-                      onPressed: () {},
-                      color: AppColors.secondaryGreen,
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.open_in_full),
-                      onPressed: () {},
-                      color: AppColors.secondaryGreen,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            /// Item list
-            itemsList.isEmpty
-                ? Expanded(
-                  child: Center(
-                    child: Text(
-                      'No Items',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: AppColors.darkGreenText,
-                      ),
+                        VerticalDivider(
+                          color: AppColors.primaryGreen,
+                          thickness: 1,
+                          width: 20,
+                        ),
+                        // Favourite Projects
+                        Container(
+                          height: screenHeight * 0.5,
+                          width: screenWidth * 0.20,
+                          decoration: BoxDecoration(),
+                          child: Column(
+                            children: [
+                              _buildMenuTitle(
+                                icon: Icons.folder_open,
+                                title: 'Favourite Projects',
+                              ),
+                              _buildListItems(
+                                itemsList: dummyFavouriteProjectsList,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                )
-                : Expanded(
-                  child: ListView.builder(
-                    itemCount: itemsList.length,
-                    itemBuilder: (context, index) {
-                      final item = itemsList[index];
-                      return Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.lightGreen2,
-
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: ListTile(
-                              leading: Icon(
-                                Icons.subdirectory_arrow_right,
-                                color: AppColors.darkGreenIcon,
+                  Divider(color: AppColors.primaryGreen, thickness: 1),
+                  // Message Box
+                  Container(
+                    height: screenHeight * 0.45,
+                    decoration: BoxDecoration(),
+                    child: Column(
+                      children: [
+                        _buildMenuTitle(
+                          icon: Icons.mail_outline,
+                          title: 'Message Box',
+                        ),
+                        Container(
+                          child: Column(
+                            children: [
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  'Projects',
+                                  style: TextStyle(
+                                    color: AppColors.darkGreenText,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                  ),
+                                ),
                               ),
-                              title: Text(item['title']),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
+                              Row(
                                 children: [
-                                  Icon(
-                                    Icons.star,
-                                    color: AppColors.primaryGreen,
+                                  Container(
+                                    width: screenWidth * 0.15,
+                                    height: screenHeight * 0.35,
+                                    child: _buildListItems(
+                                      itemsList: dummyFavouriteProjectsList,
+                                      showIcon: false,
+                                      itemOpacity: 0,
+                                    ),
                                   ),
-                                  const SizedBox(width: 8),
-                                  Icon(
-                                    Icons.copy,
-                                    color: AppColors.primaryGreen,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Icon(
-                                    Icons.delete_outline,
-                                    color: AppColors.redAccent,
+                                  VerticalDivider(thickness: 1, width: 20),
+                                  Container(
+                                    width: screenWidth * 0.25,
+                                    height: screenHeight * 0.3,
                                   ),
                                 ],
                               ),
-                            ),
+                            ],
                           ),
-                          SizedBox(height: 10),
-                        ],
-                      );
-                    },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void showCustomDialog(BuildContext context) {
-    final TextEditingController field1Controller = TextEditingController();
-    final TextEditingController field2Controller = TextEditingController();
-    final TextEditingController field3Controller = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          title: Text(
-            'Add Favorites',
-            style: TextStyle(
+                ],
+              ),
+            ),
+            VerticalDivider(
               color: AppColors.primaryGreen,
-              fontWeight: FontWeight.bold,
+              thickness: 1,
+              width: 20,
             ),
-          ),
-          content: SizedBox(
-            width: 400,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildLabeledTextField('Menu', field1Controller),
-                SizedBox(height: 10),
-                _buildLabeledTextField('Role', field2Controller),
-                SizedBox(height: 10),
-                _buildLabeledTextField('Link', field3Controller),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(
-                'Cancel',
-                style: TextStyle(color: AppColors.secondaryGreen),
+            // Notifications
+            Container(
+              height: screenHeight,
+              width: screenWidth * 0.45,
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(),
+              child: Column(
+                children: [
+                  _buildMenuTitle(
+                    icon: Icons.notifications_none,
+                    title: 'Notifications',
+                  ),
+                  _buildListItems(
+                    itemsList: dummyNotificationsList,
+                    showIcon: false,
+                  ),
+                ],
               ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Handle save logic here
-                Navigator.of(context).pop();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.darkGreenIcon,
-                foregroundColor: Colors.white,
-              ),
-              child: Text('Save'),
             ),
           ],
         );
@@ -275,29 +183,58 @@ class HomeDashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildLabeledTextField(
-    String label,
-    TextEditingController controller,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            color: AppColors.primaryGreen,
+  // Menu title
+  Widget _buildMenuTitle({required IconData icon, required String title}) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: AppColors.darkGreenIcon),
+              SizedBox(width: 10),
+              Text(
+                title,
+                style: TextStyle(
+                  color: AppColors.darkGreenText,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
+            ],
           ),
-        ),
-        SizedBox(height: 5),
-        TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          Divider(),
+        ],
+      );
+
+  // List of values
+  Widget _buildListItems({
+    required List<String> itemsList,
+    bool showIcon = true,
+    double itemOpacity = 0.2,
+  }) => Expanded(
+    child: ListView.builder(
+      padding: EdgeInsets.only(top: 10),
+      itemCount: itemsList.length,
+
+      itemBuilder: (context, index) {
+        final item = itemsList[index];
+        return Container(
+          margin: EdgeInsets.only(bottom: 6),
+          decoration: BoxDecoration(
+            color: AppColors.background.withValues(alpha: itemOpacity),
           ),
-        ),
-      ],
-    );
-  }
+          child: ListTile(
+            leading:
+                showIcon
+                    ? Icon(Icons.star, size: 20, color: AppColors.yellow)
+                    : SizedBox(),
+            title: Text(item, style: TextStyle(fontSize: 13)),
+          ),
+        );
+      },
+    ),
+  );
+
+  // Message box
+  // Widget _buildMessageBox() =>
 }

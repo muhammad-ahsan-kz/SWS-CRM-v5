@@ -31,4 +31,5 @@ class AppColors {
   static const Color redAccent = Colors.redAccent;
   static const Color transparent = Colors.transparent;
   static const Color grey = Colors.grey;
+  static const Color yellow = Colors.yellow;
 }

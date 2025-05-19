@@ -1,8 +1,8 @@
 class RouteNames {
   // General Screens
-  static const String homePage = '/';
-  static const String homeDashboardPage = '/dashboard';
-  static const String superAdminPage = '/super-admin';
+  static const String loginPage = 'loginPage';
+  static const String errorPage = 'errorPage';
+
   static const String appSettingsPage = '/app-settings';
   static const String customersPage = '/customers';
   static const String customerDashboardPage = '/customer-dashboard';
@@ -15,5 +15,17 @@ class RouteNames {
   static const String myProfilePage = '/my-profile';
   static const String aboutPage = '/about';
 
-  // Nested Screens
+  // Home Screens
+  static const String homePage = 'homePage';
+  static const String homeDashboardPage = 'homeDashboardPage';
+  static const String homeFavouritesMenuPage = 'homeFavouritesMenuPage';
+  static const String homeFavouriteProjectsPage = 'homeFavouriteProjectsPage';
+  static const String homeNotificationsPage = 'homeNotificationsPage';
+  static const String homeMessageBoxPage = 'homeMessageBoxPage';
+  static const String homeEventNotificationsPage = 'homeEventNotificationsPage';
+  static const String homeTasksPage = 'homeTasksPage';
+
+  // Super Admin Screens
+  static const String superAdminPage = 'superAdminPage';
+  static const String superAdminDropdownsPage = 'superAdminDropdownsPage';
 }
