@@ -75,7 +75,7 @@ class HomeFavouritesMenuPage extends StatelessWidget {
                               parentContext: context,
                               title: title,
                               content: Column(children: []),
-                              onSave: () {},
+                              onSave: (dialogBoxContext) {},
                             ),
                         icon: Icon(buttonIcon),
                         label: Text(buttonText),

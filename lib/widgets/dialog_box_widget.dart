@@ -4,9 +4,10 @@ import 'package:sws_crm_v5/utils/app_colors.dart';
 class DialogBoxWidget extends StatelessWidget {
   final String title;
   final Widget content;
-  final VoidCallback onSave;
+  final void Function(BuildContext dialogBoxContext) onSave;
   final double dialogBoxHeight;
   final double dialogBoxWidth;
+  final bool isBackOnSave;
 
   const DialogBoxWidget({
     super.key,
@@ -15,6 +16,7 @@ class DialogBoxWidget extends StatelessWidget {
     required this.onSave,
     this.dialogBoxHeight = 600,
     this.dialogBoxWidth = 500,
+    this.isBackOnSave = true,
   });
 
   @override
@@ -43,8 +45,8 @@ class DialogBoxWidget extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            onSave();
-            Navigator.of(dialogBoxContext).pop();
+            onSave(dialogBoxContext);
+            if (isBackOnSave) Navigator.of(dialogBoxContext).pop();
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.background,
@@ -61,13 +63,18 @@ class DialogBoxWidget extends StatelessWidget {
     required BuildContext parentContext,
     required String title,
     required Widget content,
-    required VoidCallback onSave,
+    required void Function(BuildContext dialogBoxContext) onSave,
+    bool isBackOnSave = true,
   }) {
     return showDialog(
       context: parentContext,
       builder:
-          (ctx) =>
-              DialogBoxWidget(title: title, content: content, onSave: onSave),
+          (ctx) => DialogBoxWidget(
+            title: title,
+            content: content,
+            onSave: onSave,
+            isBackOnSave: isBackOnSave,
+          ),
     );
   }
 }

@@ -458,7 +458,7 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
         pageController: pageController,
         currentPage1: currentPage,
       ),
-      onSave: () async {
+      onSave: (dialogBoxContext) async {
         final customerDetails = AddCustomerModel(
           firstName: firstNameController.text,
           lastName: lastNameController.text,

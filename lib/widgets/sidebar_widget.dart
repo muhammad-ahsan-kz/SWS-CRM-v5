@@ -79,8 +79,12 @@ class _SidebarWidgetState extends State<SidebarWidget> {
         icon: Icons.settings,
         route: RouteNames.appSettingsPage,
         subItems: [
-          SidebarItem(title: 'All', route: '/admin1'),
-          SidebarItem(title: 'Finance Manager', route: '/admin2'),
+          SidebarItem(title: 'Users', route: RouteNames.appSettingsUsersPage),
+          SidebarItem(title: 'Sales Reps', route: '/admin2'),
+          SidebarItem(title: 'Vendors', route: '/admin2'),
+          SidebarItem(title: 'Deleted Projects', route: '/admin2'),
+          SidebarItem(title: 'Dropdowns', route: '/admin2'),
+          SidebarItem(title: 'Notifications Management', route: '/admin2'),
         ],
       ),
       SidebarItem(

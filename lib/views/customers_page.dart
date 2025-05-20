@@ -78,7 +78,7 @@ class _CustomersPageState extends State<CustomersPage> {
                           parentContext: context,
                           title: 'Import File',
                           content: Column(children: []),
-                          onSave: () {},
+                          onSave: (dialogBoxContext) {},
                         ),
                   ),
                   ButtonWidget(
@@ -185,7 +185,7 @@ class _CustomersPageState extends State<CustomersPage> {
           TextFieldWidget(title: 'Email', controller: emailController),
         ],
       ),
-      onSave: () async {
+      onSave: (dialogBoxContext) async {
         final customerDetails = AddCustomerModel(
           firstName: firstNameController.text,
           lastName: lastNameController.text,
