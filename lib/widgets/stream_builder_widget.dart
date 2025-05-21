@@ -34,7 +34,20 @@ class StreamBuilderWidget<T> extends StatelessWidget {
 
         final data = snapshot.data;
 
-        final emptyCondition = isEmpty != null ? isEmpty!(data) : data == null;
+        // final emptyCondition = isEmpty != null ? isEmpty!(data) : data == null;
+
+        bool emptyCondition = false;
+
+        if (isEmpty != null) {
+          // If a custom isEmpty function is provided
+          emptyCondition = isEmpty!(data);
+        } else if (data == null) {
+          emptyCondition = true;
+        } else if (data is Iterable && data.isEmpty) {
+          emptyCondition = true;
+        } else if (data is Map && data.isEmpty) {
+          emptyCondition = true;
+        }
 
         if (emptyCondition) {
           return emptyWidget ?? const Center(child: Text('No data found.'));

@@ -40,22 +40,6 @@ class _SidebarWidgetState extends State<SidebarWidget> {
         icon: Icons.home,
         route: RouteNames.homeDashboardPage,
         subItems: [
-          // SidebarItem(
-          //   title: 'Favorites Menu',
-          //   route: RouteNames.homeFavouritesMenuPage,
-          // ),
-          // SidebarItem(
-          //   title: 'Favorites Projects',
-          //   route: RouteNames.homeFavouriteProjectsPage,
-          // ),
-          // SidebarItem(
-          //   title: 'Notifications',
-          //   route: RouteNames.homeNotificationsPage,
-          // ),
-          // SidebarItem(
-          //   title: 'Message Box',
-          //   route: RouteNames.homeMessageBoxPage,
-          // ),
           SidebarItem(
             title: 'Event Notifications',
             route: RouteNames.homeEventNotificationsPage,
@@ -71,7 +55,17 @@ class _SidebarWidgetState extends State<SidebarWidget> {
             title: 'Dropdowns',
             route: RouteNames.superAdminDropdownsPage,
           ),
-          SidebarItem(title: 'Autoplay', route: '/admin2'),
+          SidebarItem(
+            title: 'General Settings',
+            route: RouteNames.superAdminGeneralSettingsPage,
+          ),
+          // SidebarItem(  title: 'Super Admin Users', route: RouteNames. ),
+          // SidebarItem(  title: 'Role Management', route: RouteNames. ),
+          // SidebarItem(  title: 'Zip Codes', route: RouteNames. ),
+          // SidebarItem(  title: 'Weekly Calander', route: RouteNames. ),
+          // SidebarItem(  title: 'Notification Management', route: RouteNames. ),
+          // SidebarItem(  title: 'Database', route: RouteNames. ),
+          // SidebarItem(  title: 'Side Menus', route: RouteNames. ),
         ],
       ),
       SidebarItem(
@@ -80,11 +74,11 @@ class _SidebarWidgetState extends State<SidebarWidget> {
         route: RouteNames.appSettingsPage,
         subItems: [
           SidebarItem(title: 'Users', route: RouteNames.appSettingsUsersPage),
-          SidebarItem(title: 'Sales Reps', route: '/admin2'),
-          SidebarItem(title: 'Vendors', route: '/admin2'),
-          SidebarItem(title: 'Deleted Projects', route: '/admin2'),
-          SidebarItem(title: 'Dropdowns', route: '/admin2'),
-          SidebarItem(title: 'Notifications Management', route: '/admin2'),
+          // SidebarItem(title: 'Sales Reps', route: '/admin2'),
+          // SidebarItem(title: 'Vendors', route: '/admin2'),
+          // SidebarItem(title: 'Deleted Projects', route: '/admin2'),
+          // SidebarItem(title: 'Dropdowns', route: '/admin2'),
+          // SidebarItem(title: 'Notifications Management', route: '/admin2'),
         ],
       ),
       SidebarItem(
@@ -92,7 +86,6 @@ class _SidebarWidgetState extends State<SidebarWidget> {
         icon: Icons.group,
         subItems: [
           SidebarItem(title: 'All Customers', route: RouteNames.customersPage),
-          SidebarItem(title: 'Add Customer', route: '/customers/add'),
         ],
       ),
       SidebarItem(
@@ -182,7 +175,6 @@ class _SidebarWidgetState extends State<SidebarWidget> {
                         selected: isSelected || isExpanded,
                         hasSubItems: item.subItems != null,
                         onTap: () {
-                          context.goNamed(RouteNames.homeDashboardPage);
                           handleMenuTap(true);
                           if (item.subItems != null) {
                             setState(() {
@@ -191,10 +183,30 @@ class _SidebarWidgetState extends State<SidebarWidget> {
                                       ? null
                                       : item.title;
                             });
-                          } else {
-                            context.goNamed(item.route!);
+                          }
+
+                          // Navigate only if item has a direct route and no subitems, OR is the "Home" item
+                          if (item.subItems == null || item.title == 'Home') {
+                            if (item.route != null) {
+                              context.goNamed(item.route!);
+                            }
                           }
                         },
+
+                        //   onTap: () {
+                        //     context.goNamed(RouteNames.homeDashboardPage);
+                        //     handleMenuTap(true);
+                        //     if (item.subItems != null) {
+                        //       setState(() {
+                        //         expandedItem =
+                        //             expandedItem == item.title
+                        //                 ? null
+                        //                 : item.title;
+                        //       });
+                        //     } else {
+                        //       context.goNamed(item.route!);
+                        //     }
+                        //   },
                       ),
                       if (item.subItems != null && isExpanded)
                         ...item.subItems!.map((subItem) {

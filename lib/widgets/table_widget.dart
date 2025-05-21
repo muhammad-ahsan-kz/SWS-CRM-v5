@@ -13,6 +13,7 @@ class TableWidget extends StatelessWidget {
   final double tableWidth;
   final double rowTopBottomPadding;
   final MainAxisAlignment mainAxisAlignment;
+  final String emptyTableMessage;
   final void Function(Map<String, dynamic> rowData)? onRowTap;
   final Widget Function(Map<String, dynamic> rowData, int index)? actionBuilder;
 
@@ -27,6 +28,7 @@ class TableWidget extends StatelessWidget {
     this.tableWidth = 600,
     this.rowTopBottomPadding = 5,
     this.mainAxisAlignment = MainAxisAlignment.start,
+    this.emptyTableMessage = 'No Items Available !',
     this.onRowTap,
     this.actionBuilder,
   });
@@ -82,8 +84,10 @@ class TableWidget extends StatelessWidget {
                       ...columnNamesList.asMap().entries.map((entry) {
                         final i = entry.key;
                         final col = entry.value;
+                        final double width =
+                            (i < columnSizes.length) ? columnSizes[i] : 100;
                         return SizedBox(
-                          width: columnSizes[i],
+                          width: width,
                           child: Text(
                             col,
                             textAlign: TextAlign.start,
@@ -112,14 +116,13 @@ class TableWidget extends StatelessWidget {
                 SizedBox(height: 10),
                 // Scrollable Table Rows
                 (rowValuesList.isEmpty ||
-                        columnNamesList.length != columnSizes.length ||
-                        columnNamesList.length != rowFieldKeys.length)
+                        columnNamesList.length != columnSizes.length)
                     ? SizedBox(
                       height: tableHeight,
                       width: tableWidth,
                       child: Center(
                         child: Text(
-                          'No Items Available !',
+                          emptyTableMessage,
                           style: TextStyle(color: AppColors.darkGreenText),
                         ),
                       ),
@@ -158,15 +161,20 @@ class TableWidget extends StatelessWidget {
                                 children: [
                                   ...rowFieldKeys.asMap().entries.map((entry) {
                                     final i = entry.key;
-                                    final col = entry.value;
+                                    final col = rowFieldKeys[i];
+                                    final value = row[col];
+                                    final double width =
+                                        (i < columnSizes.length)
+                                            ? columnSizes[i]
+                                            : 100;
                                     return row[col] is Widget
                                         ? row[col]
                                         : SizedBox(
-                                          width: columnSizes[i],
+                                          width: width,
                                           child: Text(
-                                            row[col] == ''
+                                            value == null || value == ''
                                                 ? 'N/A'
-                                                : row[col]?.toString() ?? '',
+                                                : value.toString(),
                                             textAlign: TextAlign.start,
                                             overflow: TextOverflow.ellipsis,
                                           ),

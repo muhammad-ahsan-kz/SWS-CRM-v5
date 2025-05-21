@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sws_crm_v5/models/customers_list_model.dart';
 import 'package:sws_crm_v5/utils/routes/route_names.dart';
 import 'package:sws_crm_v5/views/AppSettings/app_settings_user_page.dart';
 import 'package:sws_crm_v5/views/about_page.dart';
 import 'package:sws_crm_v5/views/AppSettings/app_settings_page.dart';
-import 'package:sws_crm_v5/views/customer_dashboard_page.dart';
-import 'package:sws_crm_v5/views/customer_project_details_page.dart';
-import 'package:sws_crm_v5/views/customers_page.dart';
+import 'package:sws_crm_v5/views/Customer/customer_dashboard_page.dart';
+import 'package:sws_crm_v5/views/Customer/customer_project_details_page.dart';
+import 'package:sws_crm_v5/views/Customer/customers_page.dart';
 import 'package:sws_crm_v5/views/error_Page.dart';
 import 'package:sws_crm_v5/views/events_page.dart';
 import 'package:sws_crm_v5/views/help_page.dart';
-import 'package:sws_crm_v5/views/home_dashboard_page.dart';
-import 'package:sws_crm_v5/views/home_event_notifications_page.dart';
-import 'package:sws_crm_v5/views/home_favourites_menu_page.dart';
-import 'package:sws_crm_v5/views/home_favourites_projects_page.dart';
-import 'package:sws_crm_v5/views/home_message_box_page.dart';
-import 'package:sws_crm_v5/views/home_notification_page.dart';
-import 'package:sws_crm_v5/views/home_page.dart';
-import 'package:sws_crm_v5/views/home_tasks_page.dart';
+import 'package:sws_crm_v5/views/Home/home_dashboard_page.dart';
+import 'package:sws_crm_v5/views/Home/home_event_notifications_page.dart';
+import 'package:sws_crm_v5/views/Home/home_favourites_menu_page.dart';
+import 'package:sws_crm_v5/views/Home/home_favourites_projects_page.dart';
+import 'package:sws_crm_v5/views/Home/home_message_box_page.dart';
+import 'package:sws_crm_v5/views/Home/home_notification_page.dart';
+import 'package:sws_crm_v5/views/Home/home_page.dart';
+import 'package:sws_crm_v5/views/Home/home_tasks_page.dart';
 import 'package:sws_crm_v5/views/login_page.dart';
 import 'package:sws_crm_v5/views/my_profile_page.dart';
 import 'package:sws_crm_v5/views/production_page.dart';
 import 'package:sws_crm_v5/views/reports_page.dart';
-import 'package:sws_crm_v5/views/super_admin_dropdowns_page.dart';
-import 'package:sws_crm_v5/views/super_admin_page.dart';
+import 'package:sws_crm_v5/views/Super%20Admin/super_admin_dropdowns_page.dart';
+import 'package:sws_crm_v5/views/Super%20Admin/super_admin_general_settings_page.dart';
+import 'package:sws_crm_v5/views/Super%20Admin/super_admin_page.dart';
 import 'package:sws_crm_v5/views/trouble_shooting_page.dart';
 
 class MyAppRouter {
@@ -116,9 +116,16 @@ class MyAppRouter {
             routes: [
               GoRoute(
                 name: RouteNames.superAdminDropdownsPage,
-                path: '/super-admin-dropdowns',
+                path: '/dropdowns',
                 pageBuilder: (context, state) {
                   return MaterialPage(child: SuperAdminDropdownsPage());
+                },
+              ),
+              GoRoute(
+                name: RouteNames.superAdminGeneralSettingsPage,
+                path: '/general-settings',
+                pageBuilder: (context, state) {
+                  return MaterialPage(child: SuperAdminGeneralSettingsPage());
                 },
               ),
             ],
@@ -206,11 +213,11 @@ class MyAppRouter {
           ),
           GoRoute(
             name: RouteNames.customerProjectDetailsPage,
-            path: RouteNames.customerProjectDetailsPage,
+            path: '/customer-project-details/:projectName',
             pageBuilder: (context, state) {
-              final projectName = state.uri.queryParameters['projectName'];
+              final String projectName = state.pathParameters['projectName']!;
               return MaterialPage(
-                child: CustomerProjectDetailsPage(projectName: projectName!),
+                child: CustomerProjectDetailsPage(projectName: projectName),
               );
             },
           ),

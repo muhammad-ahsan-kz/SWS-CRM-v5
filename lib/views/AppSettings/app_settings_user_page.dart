@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sws_crm_v5/models/user_model.dart';
@@ -76,6 +75,7 @@ class _AppSettingsUserPageState extends State<AppSettingsUserPage> {
                         parentContext: context,
                         title: 'Add New User',
                         isBackOnSave: false,
+                        dialogBoxHeight: 500,
 
                         content: Form(
                           key: _formKey,

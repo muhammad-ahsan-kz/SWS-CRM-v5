@@ -7,6 +7,8 @@ class TextFieldWidget extends StatelessWidget {
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
   final bool obscureText;
+  final bool isTextFieldEnabled;
+  final String hintText;
 
   const TextFieldWidget({
     super.key,
@@ -15,6 +17,8 @@ class TextFieldWidget extends StatelessWidget {
     this.validator,
     this.keyboardType,
     this.obscureText = false,
+    this.isTextFieldEnabled = true,
+    this.hintText = '',
   });
 
   @override
@@ -34,8 +38,11 @@ class TextFieldWidget extends StatelessWidget {
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
+          enabled: isTextFieldEnabled,
+
           validator: validator,
           decoration: InputDecoration(
+            hintText: hintText,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 12,
               vertical: 10,

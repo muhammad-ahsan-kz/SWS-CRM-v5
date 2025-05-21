@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sws_crm_v5/models/user_model.dart';
 import 'package:sws_crm_v5/utils/firestore_variables.dart';
-import 'package:sws_crm_v5/widgets/popup_widget.dart';
+import 'package:sws_crm_v5/widgets/popup_message_widget.dart';
 
 class AppSettingsUserPageViewModel with ChangeNotifier {
   List<UserModel> allUsersList = [];
@@ -67,7 +66,7 @@ class AppSettingsUserPageViewModel with ChangeNotifier {
   Future<bool> checkIfEmailAlreadyExists({required String newEmail}) async {
     final querySnapshot =
         await FirebaseFirestore.instance
-            .collection('users')
+            .collection(FirestoreVariables.usersCollection)
             .where('email', isEqualTo: newEmail)
             .limit(1)
             .get();

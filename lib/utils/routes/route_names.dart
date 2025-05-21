@@ -28,6 +28,8 @@ class RouteNames {
   // Super Admin Screens
   static const String superAdminPage = 'superAdminPage';
   static const String superAdminDropdownsPage = 'superAdminDropdownsPage';
+  static const String superAdminGeneralSettingsPage =
+      'superAdminGeneralSettingsPage';
 
   // App Settings
   static const String appSettingsUsersPage = 'appSettingsUsersPage';
