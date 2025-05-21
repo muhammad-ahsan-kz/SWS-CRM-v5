@@ -8,6 +8,7 @@ import 'package:sws_crm_v5/view%20models/App%20Settings/app_settings_user_page_v
 import 'package:sws_crm_v5/widgets/button_widget.dart';
 import 'package:sws_crm_v5/widgets/dialog_box_widget.dart';
 import 'package:sws_crm_v5/widgets/dropdown_widget.dart';
+import 'package:sws_crm_v5/widgets/loading_animation_widget.dart';
 import 'package:sws_crm_v5/widgets/stream_builder_widget.dart';
 import 'package:sws_crm_v5/widgets/text_field_widget.dart';
 
@@ -341,5 +342,6 @@ class _AppSettingsUserPageState extends State<AppSettingsUserPage> {
         ),
       );
     },
+    loadingWidget: LoadingAnimationWidget(),
   );
 }
