@@ -32,23 +32,34 @@ class CustomersPageViewModel with ChangeNotifier {
   }
 
   // Fetch customers list
-  Stream<List<Map<String, dynamic>>> fetchCustomersList() {
-    return FirebaseFirestore.instance
-        .collection(FirestoreVariables.customersCollection)
-        .snapshots()
-        .map((querySnapshot) {
-          return querySnapshot.docs.map((doc) {
-            final data = CustomersListModel.fromJson(doc);
+  Stream<List<Map<String, dynamic>>> fetchCustomersList({
+    required BuildContext parentContext,
+  }) {
+    try {
+      return FirebaseFirestore.instance
+          .collection(FirestoreVariables.customersCollection)
+          .snapshots()
+          .map((querySnapshot) {
+            return querySnapshot.docs.map((doc) {
+              final data = CustomersListModel.fromJson(doc);
 
-            return {
-              'id': data.id,
-              'fullName': '${data.firstName} ${data.lastName}',
-              'phone': data.phone,
-              'mobile': data.mobile,
-              'email': data.email,
-              'address': data.address,
-            };
-          }).toList();
-        });
+              return {
+                'id': data.id,
+                'fullName': '${data.firstName} ${data.lastName}',
+                'phone': data.phone,
+                'mobile': data.mobile,
+                'email': data.email,
+                'address': data.address,
+              };
+            }).toList();
+          });
+    } catch (error) {
+      NotificationService.show(
+        parentContext,
+        message: 'Error Fetching Customers List',
+        type: NotificationType.error,
+      );
+      return const Stream.empty();
+    }
   }
 }

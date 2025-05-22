@@ -6,6 +6,7 @@ import 'package:sws_crm_v5/utils/routes/routes_config.dart';
 import 'package:sws_crm_v5/view%20models/App%20Settings/app_settings_user_page_view_model.dart';
 import 'package:sws_crm_v5/view%20models/Customer/customer_dashboard_page_view_model.dart';
 import 'package:sws_crm_v5/view%20models/Customer/customers_page_view_model.dart';
+import 'package:sws_crm_v5/view%20models/super_admin_drop_down_page_view_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +24,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CustomersPageViewModel()),
         ChangeNotifierProvider(create: (_) => CustomerDashboardPageViewModel()),
         ChangeNotifierProvider(create: (_) => AppSettingsUserPageViewModel()),
+        ChangeNotifierProvider(
+          create: (_) => SuperAdminDropDownPageViewModel(),
+        ),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

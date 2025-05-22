@@ -161,6 +161,7 @@ class _HomeDashboardPageState extends State<HomeDashboardPage> {
                               ),
                               _buildListItems(
                                 itemsList: dummyFavouritesMenuList,
+                                iconColor: AppColors.grey,
                               ),
                             ],
                           ),
@@ -183,6 +184,7 @@ class _HomeDashboardPageState extends State<HomeDashboardPage> {
                               ),
                               _buildListItems(
                                 itemsList: dummyFavouriteProjectsList,
+                                iconColor: AppColors.grey,
                               ),
                             ],
                           ),
@@ -374,7 +376,7 @@ class _HomeDashboardPageState extends State<HomeDashboardPage> {
                     itemsList: dummyNotificationsList,
                     icon: Icons.notifications,
                     iconColor: AppColors.grey,
-                    tileColor: AppColors.white,
+                    // tileColor: AppColors.white,
                   ),
                 ],
               ),
@@ -415,7 +417,7 @@ class _HomeDashboardPageState extends State<HomeDashboardPage> {
     double itemOpacity = 0.2,
     IconData icon = Icons.star,
     Color iconColor = AppColors.yellow,
-    Color tileColor = AppColors.background,
+    // Color tileColor = AppColors.background,
     ValueChanged<String>? onItemTap,
   }) => Expanded(
     child: ListView.builder(
@@ -427,7 +429,7 @@ class _HomeDashboardPageState extends State<HomeDashboardPage> {
         return Container(
           margin: EdgeInsets.only(bottom: 6),
           decoration: BoxDecoration(
-            color: tileColor.withValues(alpha: itemOpacity),
+            // color: tileColor.withValues(alpha: itemOpacity),
           ),
           child: ListTile(
             onTap: () {

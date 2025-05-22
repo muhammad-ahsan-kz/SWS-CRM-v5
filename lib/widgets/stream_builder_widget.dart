@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sws_crm_v5/widgets/loading_animation_widget.dart';
 
 class StreamBuilderWidget<T> extends StatelessWidget {
   final Stream<T> stream;
@@ -24,8 +25,7 @@ class StreamBuilderWidget<T> extends StatelessWidget {
       stream: stream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return loadingWidget ??
-              const Center(child: CircularProgressIndicator());
+          return loadingWidget ?? const Center(child: LoadingAnimationWidget());
         }
 
         if (snapshot.hasError) {

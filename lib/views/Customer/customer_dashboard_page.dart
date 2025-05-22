@@ -10,6 +10,7 @@ import 'package:sws_crm_v5/widgets/dropdown_widget.dart';
 import 'package:sws_crm_v5/widgets/future_builder_widget.dart';
 import 'package:sws_crm_v5/widgets/icon_button_widget.dart';
 import 'package:sws_crm_v5/widgets/loading_animation_widget.dart';
+import 'package:sws_crm_v5/widgets/new_button.dart';
 import 'package:sws_crm_v5/widgets/stream_builder_widget.dart';
 import 'package:sws_crm_v5/widgets/text_field_widget.dart';
 
@@ -28,6 +29,18 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
   final _pageTwoFormKey = GlobalKey<FormState>();
   final PageController pageController = PageController();
   int currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    final viewModel = Provider.of<CustomerDashboardPageViewModel>(
+      context,
+      listen: false,
+    );
+    viewModel.fetchAllDropdowns(context);
+    debugPrint(viewModel.allDropdowns.length.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<CustomerDashboardPageViewModel>(
@@ -94,29 +107,53 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
                 color: AppColors.primaryGreen,
               ),
             ),
-            FutureBuilderWidget(
-              future: viewModel.fetchCustomerDetails(
-                customerId: widget.customerId,
-              ),
-              builder: (context, snapshot) {
-                return Text(
-                  'Welcome back ${snapshot!['firstName']} ${snapshot['lastName']}',
-                  style: TextStyle(fontSize: 12, color: AppColors.lightGreen),
-                );
-              },
-              loadingWidget: Text(
-                '...',
-                style: TextStyle(fontSize: 12, color: AppColors.lightGreen),
-              ),
-            ),
+            // FutureBuilderWidget(
+            //   future: viewModel.fetchCustomerDetails(
+            //     customerId: widget.customerId,
+            //   ),
+            //   builder: (context, snapshot) {
+            //     return Text(
+            //       'Welcome back ${snapshot!['firstName']} ${snapshot['lastName']}',
+            //       style: TextStyle(fontSize: 12, color: AppColors.lightGreen),
+            //     );
+            //   },
+            //   loadingWidget: Text(
+            //     '...',
+            //     style: TextStyle(fontSize: 12, color: AppColors.lightGreen),
+            //   ),
+            // ),
           ],
         ),
         Row(
           spacing: 10,
           children: [
             IconButtonWidget(
-              icon: Icons.add_circle_outline,
+              icon: Icons.upload_file_outlined,
               padding: 5,
+              ontap:
+                  () => DialogBoxWidget.show(
+                    parentContext: context,
+                    title: 'Import File',
+                    content: Column(children: []),
+                    onSave: (dialogBoxContext) {},
+                  ),
+            ),
+            IconButtonWidget(
+              icon: Icons.download_outlined,
+              padding: 5,
+              ontap:
+                  () => DialogBoxWidget.show(
+                    parentContext: context,
+                    title: 'Download File',
+                    content: Column(children: []),
+                    onSave: (dialogBoxContext) {},
+                  ),
+            ),
+            IconButtonWidget(icon: Icons.filter_list, padding: 5),
+
+            NewButton(
+              title: 'Add Project',
+              icon: Icons.add,
               ontap: () {
                 // Dialog Box
                 addNewProjectDialogBox(
@@ -127,27 +164,6 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
                 );
               },
             ),
-            IconButtonWidget(
-              icon: Icons.insert_drive_file_outlined,
-              padding: 5,
-            ),
-            ButtonWidget(
-              title: 'Download',
-              icon: Icons.insert_drive_file_outlined,
-              onTap: () {
-                // showCustomDialog(
-                //   context: context,
-                //   subMenuName: 'Download',
-                // );
-              },
-              isIconShown: true,
-              textSize: 15,
-              iconSize: 18,
-              horizontalPadding: 20,
-              verticalPadding: 8,
-            ),
-            IconButtonWidget(icon: Icons.filter_list, padding: 5),
-            IconButtonWidget(icon: Icons.done_all, padding: 5),
           ],
         ),
       ],
@@ -199,29 +215,34 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
               ),
               builder: (context, snapshot) {
                 return SizedBox(
-                  height: screenHeight * 0.2,
+                  height: screenHeight * 0.3,
                   child: Column(
                     children: [
-                      _buildDetailsRow(
-                        title: 'Customer Id',
-                        value: widget.customerId,
-                      ),
                       _buildDetailsRow(
                         title: 'Full Name',
                         value:
                             '${snapshot!['firstName']} ${snapshot['lastName']}',
+                        screenWidth: screenWidth * 0.15,
+                      ),
+                      _buildDetailsRow(
+                        title: 'Customer Id',
+                        value: widget.customerId,
+                        screenWidth: screenWidth * 0.15,
                       ),
                       _buildDetailsRow(
                         title: 'Address',
                         value: snapshot['address'],
+                        screenWidth: screenWidth * 0.15,
                       ),
                       _buildDetailsRow(
                         title: 'Phone',
                         value: snapshot['phone'],
+                        screenWidth: screenWidth * 0.15,
                       ),
                       _buildDetailsRow(
                         title: 'Email',
                         value: snapshot['email'],
+                        screenWidth: screenWidth * 0.15,
                       ),
                       SizedBox(height: 30),
                     ],
@@ -290,42 +311,46 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
   }
 
   // Customer Details Row
-  Widget _buildDetailsRow({required String title, required String value}) =>
+  Widget _buildDetailsRow({
+    required String title,
+    required String value,
+    required double screenWidth,
+  }) => Column(
+    children: [
       Column(
+        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                width: 80,
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    color: AppColors.secondaryGreen,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+          SizedBox(
+            width: screenWidth,
+            child: Text(
+              title,
+              style: TextStyle(
+                color: AppColors.secondaryGreen,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
               ),
-              SizedBox(
-                width: 120,
-                child: Text(
-                  value,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.end,
-                  style: TextStyle(
-                    color: AppColors.primaryGreen,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-          // Divider(),
-          SizedBox(height: 10),
+          SizedBox(
+            width: screenWidth,
+            child: Text(
+              value,
+              overflow: TextOverflow.ellipsis,
+              // textAlign: TextAlign.end,
+              style: TextStyle(
+                color: AppColors.primaryGreen,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
         ],
-      );
+      ),
+      // Divider(),
+      SizedBox(height: 10),
+    ],
+  );
 
   // Customer Actions Section
   Widget _buildActionsRow({
@@ -396,7 +421,10 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
             // Divider(),
             SizedBox(height: 20),
             StreamBuilderWidget<List<ProjectModel>>(
-              stream: viewModel.fetchProjectsList(parentContext: context),
+              stream: viewModel.fetchProjectsList(
+                parentContext: context,
+                customerId: widget.customerId,
+              ),
               // isEmpty: (data) => data == null || data.isEmpty,
               builder: (context, projectsList) {
                 return Wrap(
@@ -557,6 +585,7 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
     final addressController = TextEditingController();
     final unitController = TextEditingController();
     final ahjController = TextEditingController();
+    final contractSignController = TextEditingController();
     final projectPriceController = TextEditingController();
 
     return StatefulBuilder(
@@ -621,14 +650,115 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
                             ),
                             _buildCustomDropdown(
                               title: 'Branch Name',
-                              selectedValue: viewModel.selectedBranchNameValue,
+                              selectedValue: viewModel.selectedBranchNameValue!,
                               selectedValuesList:
                                   viewModel.branchNameValuesList,
                             ),
-
+                            _buildCustomDropdown(
+                              title: 'Vendor',
+                              selectedValue: viewModel.selectedVendorValue,
+                              selectedValuesList: viewModel.vendorValuesList,
+                            ),
+                            _buildCustomDropdown(
+                              title: 'Sales Rep',
+                              selectedValue: viewModel.selectedSalesRepValue,
+                              selectedValuesList: viewModel.salesRepValuesList,
+                            ),
+                            _buildCustomDropdown(
+                              title: 'Project Type',
+                              selectedValue: viewModel.selectedProjectTypeValue,
+                              selectedValuesList:
+                                  viewModel.projectTypeValuesList,
+                            ),
+                            _buildCustomDropdown(
+                              title: 'Existing System',
+                              selectedValue:
+                                  viewModel.selectedExistingSystemValue,
+                              selectedValuesList:
+                                  viewModel.existingSystemValuesList,
+                            ),
+                            _buildCustomDropdown(
+                              title: 'Project Manager',
+                              selectedValue:
+                                  viewModel.selectedProjectManagerValue,
+                              selectedValuesList:
+                                  viewModel.projectManagerValuesList,
+                            ),
+                            _buildCustomDropdown(
+                              title: 'Project Manager VA',
+                              selectedValue:
+                                  viewModel.selectedProjectManagerVAValue,
+                              selectedValuesList:
+                                  viewModel.projectManagerVAValuesList,
+                            ),
+                            _buildCustomDropdown(
+                              title: 'Secondary Project Manager',
+                              selectedValue:
+                                  viewModel
+                                      .selectedSecondaryProjectManagerValue,
+                              selectedValuesList:
+                                  viewModel.secondaryProjectManagerValuesList,
+                            ),
+                            _buildCustomDropdown(
+                              title: 'Secondary Project Manager VA',
+                              selectedValue:
+                                  viewModel
+                                      .selectedSecondaryProjectManagerVAValue,
+                              selectedValuesList:
+                                  viewModel.secondaryProjectManagerVAValuesList,
+                            ),
+                            _buildCustomDropdown(
+                              title: 'Finance Manager',
+                              selectedValue:
+                                  viewModel.selectedFinanceManagerValue,
+                              selectedValuesList:
+                                  viewModel.financeManagerValuesList,
+                            ),
+                            _buildCustomDropdown(
+                              title: 'Finance Manager VA',
+                              selectedValue:
+                                  viewModel.selectedFinanceManagerVAValue,
+                              selectedValuesList:
+                                  viewModel.financeManagerVAValuesList,
+                            ),
+                            _buildCustomDropdown(
+                              title: 'Engineer',
+                              selectedValue: viewModel.selectedEngineerValue,
+                              selectedValuesList: viewModel.engineerValuesList,
+                            ),
+                            _buildCustomDropdown(
+                              title: 'Fire Approval Needed',
+                              selectedValue:
+                                  viewModel.selectedFireApprovalNeededValue,
+                              selectedValuesList:
+                                  viewModel.fireApprovalNeededValuesList,
+                            ),
+                            _buildCustomDropdown(
+                              title: 'Fire Inspection',
+                              selectedValue:
+                                  viewModel.selectedFireInspectionValue,
+                              selectedValuesList:
+                                  viewModel.fireInspectionValuesList,
+                            ),
+                            _buildCustomDropdown(
+                              title: 'Permit Tech',
+                              selectedValue: viewModel.selectedPermitTechValue,
+                              selectedValuesList:
+                                  viewModel.projectPermitTechValuesList,
+                            ),
+                            TextFieldWidget(
+                              title: 'Contract Sign',
+                              controller: contractSignController,
+                              hintText: 'mm/dd/yyyy',
+                            ),
                             TextFieldWidget(
                               title: 'Project Price',
                               controller: projectPriceController,
+                            ),
+                            _buildCustomDropdown(
+                              title: 'Utility',
+                              selectedValue: viewModel.selectedUtilityValue,
+                              selectedValuesList: viewModel.utilityValuesList,
                             ),
                           ],
                         ),
@@ -641,8 +771,17 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
                         key: _pageTwoFormKey,
                         child: Column(
                           children: [
-                            Expanded(
-                              child: Container(color: AppColors.secondaryGreen),
+                            _buildCustomDropdown(
+                              title: 'Job Status',
+                              selectedValue: viewModel.selectedJobStatusValue,
+                              selectedValuesList: viewModel.jobStatusValuesList,
+                            ),
+                            _buildCustomDropdown(
+                              title: 'Project Status',
+                              selectedValue:
+                                  viewModel.selectedProjectStatusValue,
+                              selectedValuesList:
+                                  viewModel.projectStatusValuesList,
                             ),
                           ],
                         ),

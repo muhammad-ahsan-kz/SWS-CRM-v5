@@ -1,81 +1,69 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sws_crm_v5/models/customers_list_model.dart';
+import 'package:sws_crm_v5/models/dropdown_model.dart';
 import 'package:sws_crm_v5/models/project_model.dart';
 import 'package:sws_crm_v5/utils/firestore_variables.dart';
 import 'package:sws_crm_v5/widgets/popup_message_widget.dart';
 
 class CustomerDashboardPageViewModel with ChangeNotifier {
+  List<DropdownModel> allDropdowns = [];
+
   String selectedContinueValue = 'No';
-  final List<String> continueValuesList = ['No', 'Yes'];
+  List<String> continueValuesList = ['No', 'Yes'];
 
   String selectedCustomerNameValue = 'Barbara Darling';
-  final List<String> customerNameValuesList = [
-    'Barbara Darling',
-    'Mark Fisher',
-  ];
-  String selectedBranchNameValue = 'Barbara Darling';
-  final List<String> branchNameValuesList = ['Barbara Darling', 'Mark Fisher'];
+  List<String> customerNameValuesList = ['Barbara Darling', 'Mark Fisher'];
+  String? selectedBranchNameValue;
+  List<String> branchNameValuesList = [];
   String selectedVendorValue = 'Barbara Darling';
-  final List<String> vendorValuesList = ['Barbara Darling', 'Mark Fisher'];
+  List<String> vendorValuesList = ['Barbara Darling', 'Mark Fisher'];
   String selectedSalesRepValue = 'Barbara Darling';
-  final List<String> salesRepValuesList = ['Barbara Darling', 'Mark Fisher'];
+  List<String> salesRepValuesList = ['Barbara Darling', 'Mark Fisher'];
   String selectedProjectTypeValue = 'Barbara Darling';
-  final List<String> projectTypeValuesList = ['Barbara Darling', 'Mark Fisher'];
+  List<String> projectTypeValuesList = ['Barbara Darling', 'Mark Fisher'];
   String selectedExistingSystemValue = 'Barbara Darling';
-  final List<String> existingSystemValuesList = [
-    'Barbara Darling',
-    'Mark Fisher',
-  ];
+  List<String> existingSystemValuesList = ['Barbara Darling', 'Mark Fisher'];
   String selectedProjectManagerValue = 'Barbara Darling';
-  final List<String> projectManagerValuesList = [
-    'Barbara Darling',
-    'Mark Fisher',
-  ];
+  List<String> projectManagerValuesList = ['Barbara Darling', 'Mark Fisher'];
   String selectedProjectManagerVAValue = 'Barbara Darling';
-  final List<String> projectManagerVAValuesList = [
-    'Barbara Darling',
-    'Mark Fisher',
-  ];
+  List<String> projectManagerVAValuesList = ['Barbara Darling', 'Mark Fisher'];
   String selectedSecondaryProjectManagerValue = 'Barbara Darling';
-  final List<String> secondaryProjectManagerValuesList = [
+  List<String> secondaryProjectManagerValuesList = [
     'Barbara Darling',
     'Mark Fisher',
   ];
   String selectedSecondaryProjectManagerVAValue = 'Barbara Darling';
-  final List<String> secondaryProjectManagerVAValuesList = [
+  List<String> secondaryProjectManagerVAValuesList = [
     'Barbara Darling',
     'Mark Fisher',
   ];
   String selectedFinanceManagerValue = 'Barbara Darling';
-  final List<String> financeManagerValuesList = [
-    'Barbara Darling',
-    'Mark Fisher',
-  ];
+  List<String> financeManagerValuesList = ['Barbara Darling', 'Mark Fisher'];
   String selectedFinanceManagerVAValue = 'Barbara Darling';
-  final List<String> financeManagerVAValuesList = [
-    'Barbara Darling',
-    'Mark Fisher',
-  ];
+  List<String> financeManagerVAValuesList = ['Barbara Darling', 'Mark Fisher'];
   String selectedEngineerValue = 'Barbara Darling';
-  final List<String> engineerValuesList = ['Barbara Darling', 'Mark Fisher'];
+  List<String> engineerValuesList = ['Barbara Darling', 'Mark Fisher'];
   String selectedFireApprovalNeededValue = 'Barbara Darling';
-  final List<String> fireApprovalNeededValuesList = [
+  List<String> fireApprovalNeededValuesList = [
     'Barbara Darling',
     'Mark Fisher',
   ];
   String selectedFireInspectionValue = 'Barbara Darling';
-  final List<String> fireInspectionValuesList = [
-    'Barbara Darling',
-    'Mark Fisher',
-  ];
+  List<String> fireInspectionValuesList = ['Barbara Darling', 'Mark Fisher'];
   String selectedPermitTechValue = 'Barbara Darling';
-  final List<String> projectPermitTechValuesList = [
-    'Barbara Darling',
-    'Mark Fisher',
-  ];
+  List<String> projectPermitTechValuesList = ['Barbara Darling', 'Mark Fisher'];
   String selectedUtilityValue = 'Barbara Darling';
-  final List<String> utilityValuesList = ['Barbara Darling', 'Mark Fisher'];
+  List<String> utilityValuesList = ['Barbara Darling', 'Mark Fisher'];
+
+  String selectedJobStatusValue = 'Inprogress';
+  List<String> jobStatusValuesList = ['Inprogress', 'Completed'];
+  String selectedProjectStatusValue = 'Canceled';
+  List<String> projectStatusValuesList = [
+    'Canceled',
+    'Inprogress',
+    'Completed',
+  ];
   // Add new project
   Future<void> addCustomerProject({
     required BuildContext parentContext,
@@ -148,11 +136,12 @@ class CustomerDashboardPageViewModel with ChangeNotifier {
   // Fetch projects list
   Stream<List<ProjectModel>> fetchProjectsList({
     required BuildContext parentContext,
+    required String customerId,
   }) {
     try {
-      Query querySnapshot = FirebaseFirestore.instance.collection(
-        FirestoreVariables.projectsCollection,
-      );
+      Query querySnapshot = FirebaseFirestore.instance
+          .collection(FirestoreVariables.projectsCollection)
+          .where('customerId', isEqualTo: customerId);
 
       final projectsList = querySnapshot.snapshots().map(
         (fetchedList) =>
@@ -183,5 +172,85 @@ class CustomerDashboardPageViewModel with ChangeNotifier {
   }) {
     selectedValue = newValue;
     notifyListeners();
+  }
+
+  // // Fetch customers list
+  // Future<void> fetchCustomersList({required BuildContext parentContext}) async {
+  //   try {
+  //     final fetchedList =
+  //         await FirebaseFirestore.instance
+  //             .collection(FirestoreVariables.customersCollection)
+  //             .get();
+  //     // Full List
+  //     customerNameValuesList =
+  //         fetchedList.docs.map((doc) {
+  //           final data = CustomersListModel.fromJson(doc);
+  //           return '${data.firstName} ${data.lastName}';
+  //         }).toList();
+
+  //     // First Item
+  //     if (fetchedList.docs.isNotEmpty) {
+  //       final firstCustomer = CustomersListModel.fromJson(
+  //         fetchedList.docs.first,
+  //       );
+  //       selectedCustomerNameValue = firstCustomer.firstName;
+  //     } else {
+  //       selectedCustomerNameValue = 'Select a Customer';
+  //     }
+  //     notifyListeners();
+  //   } catch (error) {
+  //     selectedCustomerNameValue = 'Select a Customer';
+  //     customerNameValuesList = [];
+  //     notifyListeners();
+  //     debugPrint(error.toString());
+  //   }
+  // }
+
+  Future<void> fetchAllDropdowns(BuildContext context) async {
+    try {
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection(FirestoreVariables.dropdownsCollection)
+              .get();
+
+      allDropdowns =
+          snapshot.docs.map((doc) {
+            return DropdownModel.fromJson(document: doc.data(), docId: doc.id);
+          }).toList();
+
+      // Simple assignments for each type
+      assignDropdown(
+        type: 'Branch',
+        setList: (list) => branchNameValuesList = list,
+        setSelected: (value) => selectedBranchNameValue = value,
+      );
+
+      notifyListeners();
+    } catch (e) {
+      NotificationService.show(
+        context,
+        message: 'Error loading dropdowns',
+        type: NotificationType.error,
+      );
+    }
+  }
+
+  // Helper to get dropdowns list by type
+  List<String> getDropdowns(String type) {
+    final found = allDropdowns.firstWhere(
+      (d) => d.type == type,
+      orElse: () => DropdownModel(id: '', type: type, dropdowns: []),
+    );
+    return found.dropdowns;
+  }
+
+  void assignDropdown({
+    required String type,
+    required Function(List<String>) setList,
+    required Function(String?) setSelected,
+  }) {
+    final items = getDropdowns(type);
+    setList(items);
+    setSelected(items.isNotEmpty ? items.first : null);
   }
 }

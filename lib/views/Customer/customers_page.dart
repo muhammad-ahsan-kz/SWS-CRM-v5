@@ -10,6 +10,7 @@ import 'package:sws_crm_v5/widgets/button_widget.dart';
 import 'package:sws_crm_v5/widgets/dialog_box_widget.dart';
 import 'package:sws_crm_v5/widgets/icon_button_widget.dart';
 import 'package:sws_crm_v5/widgets/loading_animation_widget.dart';
+import 'package:sws_crm_v5/widgets/new_button.dart';
 import 'package:sws_crm_v5/widgets/stream_builder_widget.dart';
 import 'package:sws_crm_v5/widgets/table_widget.dart';
 import 'package:sws_crm_v5/widgets/text_field_widget.dart';
@@ -65,18 +66,7 @@ class _CustomersPageState extends State<CustomersPage> {
                 spacing: 10,
                 children: [
                   IconButtonWidget(
-                    icon: Icons.add_circle_outline,
-                    padding: 5,
-                    ontap: () {
-                      // Dialog Box
-                      addNewCustomerDialogBox(
-                        context: context,
-                        viewModel: viewModel,
-                      );
-                    },
-                  ),
-                  IconButtonWidget(
-                    icon: Icons.insert_drive_file_outlined,
+                    icon: Icons.upload_file_outlined,
                     padding: 5,
                     ontap:
                         () => DialogBoxWidget.show(
@@ -86,18 +76,28 @@ class _CustomersPageState extends State<CustomersPage> {
                           onSave: (dialogBoxContext) {},
                         ),
                   ),
-                  ButtonWidget(
-                    title: 'Download',
-                    icon: Icons.insert_drive_file_outlined,
-                    onTap: () {},
-                    isIconShown: true,
-                    textSize: 15,
-                    iconSize: 18,
-                    horizontalPadding: 20,
-                    verticalPadding: 8,
+                  IconButtonWidget(
+                    icon: Icons.download_outlined,
+                    padding: 5,
+                    ontap:
+                        () => DialogBoxWidget.show(
+                          parentContext: context,
+                          title: 'Download File',
+                          content: Column(children: []),
+                          onSave: (dialogBoxContext) {},
+                        ),
                   ),
-                  IconButtonWidget(icon: Icons.filter_list, padding: 5),
-                  IconButtonWidget(icon: Icons.done_all, padding: 5),
+                  NewButton(
+                    title: 'Add Customer',
+                    icon: Icons.add,
+                    ontap: () {
+                      // Dialog Box
+                      addNewCustomerDialogBox(
+                        context: context,
+                        viewModel: viewModel,
+                      );
+                    },
+                  ),
                 ],
               ),
             ],
@@ -297,7 +297,7 @@ class _CustomersPageState extends State<CustomersPage> {
     required double screenHeight,
   }) {
     return StreamBuilderWidget<List<Map<String, dynamic>>>(
-      stream: viewModel.fetchCustomersList(),
+      stream: viewModel.fetchCustomersList(parentContext: context),
       builder: (context, rowsValuesList) {
         if ((rowsValuesList.isEmpty)) {
           return TableWidget(
@@ -309,38 +309,110 @@ class _CustomersPageState extends State<CustomersPage> {
             emptyTableMessage: 'No Customers Found !',
           );
         } else {
-          return Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TableWidget(
-                  columnNamesList: columnNamesList,
-                  rowValuesList: rowsValuesList,
-                  columnSizes: [
-                    screenWidth * 0.07,
-                    screenWidth * 0.08,
-                    screenWidth * 0.05,
-                    screenWidth * 0.05,
-                    screenWidth * 0.11,
-                    screenWidth * 0.18,
+          return Table(
+            border: TableBorder.all(color: Colors.grey.shade400, width: 1),
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            columnWidths: const {
+              0: FlexColumnWidth(),
+              1: FlexColumnWidth(),
+              2: FlexColumnWidth(),
+              3: FlexColumnWidth(),
+              4: FlexColumnWidth(),
+              5: FlexColumnWidth(),
+              6: FlexColumnWidth(),
+              7: FlexColumnWidth(),
+            },
+            children: [
+              // Table Header
+              TableRow(
+                // decoration: BoxDecoration(color: Colors.grey.shade200),
+                children: [
+                  _buildTableColumnText(title: 'Customer ID'),
+                  _buildTableColumnText(title: 'Full Name'),
+                  _buildTableColumnText(title: 'Phone'),
+                  _buildTableColumnText(title: 'Mobile'),
+                  _buildTableColumnText(title: 'Email'),
+                  _buildTableColumnText(title: 'Address'),
+                  _buildTableColumnText(title: 'Actions'),
+                ],
+              ),
+              // Table Rows
+              ...rowsValuesList.map((customer) {
+                return TableRow(
+                  children: [
+                    _buildTableRowText(title: customer['id']),
+                    _buildTableRowText(title: '${customer['fullName']}'),
+                    _buildTableRowText(title: customer['phone']),
+                    _buildTableRowText(title: customer['mobile']),
+                    _buildTableRowText(title: customer['email']),
+                    _buildTableRowText(title: customer['address']),
+                    IconButtonWidget(
+                      icon: Icons.visibility_outlined,
+                      padding: 5,
+                      ontap: () {
+                        final String customerId = customer['id'] ?? 'Unknown';
+                        context.goNamed(
+                          RouteNames.customerDashboardPage,
+                          queryParameters: {'customerId': customerId},
+                        );
+                      },
+                    ),
                   ],
-                  tableWidth: screenWidth * 0.8,
-                  tableHeight: screenHeight * 0.7,
-                  rowTopBottomPadding: 7,
-                  onRowTap: (rowData) {
-                    final String customerId = rowData['id'] ?? 'Unknown';
-                    context.goNamed(
-                      RouteNames.customerDashboardPage,
-                      queryParameters: {'customerId': customerId},
-                    );
-                  },
-                ),
-              ],
-            ),
+                );
+              }).toList(),
+            ],
           );
+          // return Expanded(
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       TableWidget(
+          //         columnNamesList: columnNamesList,
+          //         rowValuesList: rowsValuesList,
+          //         columnSizes: [
+          //           screenWidth * 0.07,
+          //           screenWidth * 0.08,
+          //           screenWidth * 0.05,
+          //           screenWidth * 0.05,
+          //           screenWidth * 0.11,
+          //           screenWidth * 0.18,
+          //         ],
+          //         tableWidth: screenWidth * 0.8,
+          //         tableHeight: screenHeight * 0.7,
+          //         rowTopBottomPadding: 7,
+          //         onRowTap: (rowData) {
+          //           final String customerId = rowData['id'] ?? 'Unknown';
+          //           context.goNamed(
+          //             RouteNames.customerDashboardPage,
+          //             queryParameters: {'customerId': customerId},
+          //           );
+          //         },
+          //       ),
+          //     ],
+          //   ),
+          // );
         }
       },
       loadingWidget: LoadingAnimationWidget(),
     );
-  }
+  } // Column Text
+
+  Widget _buildTableColumnText({required title}) => Padding(
+    padding: EdgeInsets.all(10),
+    child: Text(
+      title,
+      textAlign: TextAlign.center,
+      style: TextStyle(color: AppColors.lightGreenText, fontSize: 15),
+    ),
+  );
+
+  // Row Text
+  Widget _buildTableRowText({required title}) => Padding(
+    padding: EdgeInsets.all(10),
+    child: Text(
+      title,
+      textAlign: TextAlign.center,
+      style: TextStyle(fontSize: 13),
+    ),
+  );
 }

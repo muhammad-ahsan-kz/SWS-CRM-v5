@@ -7,6 +7,7 @@ class IconButtonWidget extends StatelessWidget {
   final double borderRadius;
   final double padding;
   final Color color;
+  final double size;
 
   const IconButtonWidget({
     super.key,
@@ -15,6 +16,7 @@ class IconButtonWidget extends StatelessWidget {
     this.borderRadius = 50,
     this.padding = 0,
     this.color = AppColors.darkGreenIcon,
+    this.size = 25,
   });
 
   @override
@@ -24,7 +26,7 @@ class IconButtonWidget extends StatelessWidget {
       borderRadius: BorderRadius.circular(borderRadius),
       child: Padding(
         padding: EdgeInsets.all(padding),
-        child: Icon(icon, color: color),
+        child: Icon(icon, color: color, size: size),
       ),
     );
   }
