@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -291,6 +292,204 @@ class _CustomersPageState extends State<CustomersPage> {
     );
   }
 
+  // // Edit customer dialog box
+  Future<void> editCustomerDialogBox({
+    required BuildContext context,
+    required CustomersPageViewModel viewModel,
+    required String customerId,
+    required String firstName,
+    required String lastName,
+    required String secondaryName,
+    required String secondaryLastName,
+    required String phone,
+    required String mobile,
+    required String address,
+    required String unit,
+    required String email,
+  }) {
+    final TextEditingController firstNameController = TextEditingController(
+      text: firstName,
+    );
+    final TextEditingController lastNameController = TextEditingController(
+      text: lastName,
+    );
+    final TextEditingController secondaryNameController = TextEditingController(
+      text: secondaryName,
+    );
+    final TextEditingController secondaryLastNameController =
+        TextEditingController(text: secondaryLastName);
+    final TextEditingController phoneController = TextEditingController(
+      text: phone,
+    );
+    final TextEditingController mobileController = TextEditingController(
+      text: mobile,
+    );
+    final TextEditingController addressController = TextEditingController(
+      text: address,
+    );
+    final TextEditingController unitController = TextEditingController(
+      text: unit,
+    );
+    final TextEditingController emailController = TextEditingController(
+      text: email,
+    );
+
+    return DialogBoxWidget.show(
+      parentContext: context,
+      title: 'Edit Customer',
+      saveButtonText: 'Update',
+      isBackOnSave: false,
+      dialogBoxHeight: 500,
+      content: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            Row(
+              spacing: 20,
+              children: [
+                Expanded(
+                  child: TextFieldWidget(
+                    title: 'First Name',
+                    controller: firstNameController,
+                    // initialValue: 'Ahsan',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'First Name is required';
+                      }
+
+                      return null;
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: TextFieldWidget(
+                    title: 'Last Name',
+                    controller: lastNameController,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              spacing: 20,
+              children: [
+                Expanded(
+                  child: TextFieldWidget(
+                    title: 'Secondary Name',
+                    controller: secondaryNameController,
+                  ),
+                ),
+                Expanded(
+                  child: TextFieldWidget(
+                    title: 'Secondary Last Name',
+                    controller: secondaryLastNameController,
+                  ),
+                ),
+              ],
+            ),
+
+            Row(
+              spacing: 20,
+              children: [
+                Expanded(
+                  child: TextFieldWidget(
+                    title: 'Phone',
+                    controller: phoneController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Phone number is required';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: TextFieldWidget(
+                    title: 'Mobile',
+                    controller: mobileController,
+                  ),
+                ),
+              ],
+            ),
+            TextFieldWidget(title: 'Address', controller: addressController),
+            TextFieldWidget(title: 'Unit Name', controller: unitController),
+            TextFieldWidget(
+              title: 'Email',
+              controller: emailController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Email is required';
+                }
+
+                if (!RegExp(
+                  r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$',
+                ).hasMatch(value)) {
+                  return 'Please enter a valid email';
+                }
+
+                return null;
+              },
+            ),
+          ],
+        ),
+      ),
+      onSave: (dialogBoxContext) async {
+        final customerDetails = AddCustomerModel(
+          firstName: firstNameController.text,
+          lastName: lastNameController.text,
+          secondaryName: secondaryNameController.text,
+          secondaryLastName: secondaryLastNameController.text,
+          phone: phoneController.text,
+          mobile: mobileController.text,
+          address: addressController.text,
+          unit: unitController.text,
+          email: emailController.text,
+        );
+
+        if (_formKey.currentState!.validate()) {
+          await viewModel.editCustomer(
+            parentContext: context,
+            dialogBoxContext: dialogBoxContext,
+            customerId: customerId,
+            customerDetails: customerDetails.toJson(),
+          );
+        }
+      },
+    );
+  }
+
+  // Delete customer dialog box
+  Future<void> deleteCustomerDialogBox({
+    required BuildContext context,
+    required CustomersPageViewModel viewModel,
+    required String customerId,
+  }) {
+    return DialogBoxWidget.show(
+      parentContext: context,
+      title: 'Delete Customer',
+      saveButtonText: 'Delete',
+      isBackOnSave: false,
+      dialogBoxHeight: 200,
+      content: Column(
+        children: [
+          SizedBox(height: 50),
+          Text(
+            'Are you sure you want to delete this customer?',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, color: AppColors.lightGreenText),
+          ),
+        ],
+      ),
+      onSave: (dialogBoxContext) async {
+        await viewModel.deleteCustomer(
+          parentContext: context,
+          dialogBoxContext: dialogBoxContext,
+          customerId: customerId,
+        );
+      },
+    );
+  }
+
+  // Customers List Table
   Widget _buildShowCustomersListTable({
     required CustomersPageViewModel viewModel,
     required double screenWidth,
@@ -340,22 +539,68 @@ class _CustomersPageState extends State<CustomersPage> {
               ...rowsValuesList.map((customer) {
                 return TableRow(
                   children: [
-                    _buildTableRowText(title: customer['id']),
-                    _buildTableRowText(title: '${customer['fullName']}'),
-                    _buildTableRowText(title: customer['phone']),
-                    _buildTableRowText(title: customer['mobile']),
-                    _buildTableRowText(title: customer['email']),
-                    _buildTableRowText(title: customer['address']),
-                    IconButtonWidget(
-                      icon: Icons.visibility_outlined,
-                      padding: 5,
-                      ontap: () {
-                        final String customerId = customer['id'] ?? 'Unknown';
-                        context.goNamed(
-                          RouteNames.customerDashboardPage,
-                          queryParameters: {'customerId': customerId},
-                        );
-                      },
+                    _buildTableRowText(
+                      title: customer['id'],
+                      customerId: customer['id'],
+                    ),
+                    _buildTableRowText(
+                      title: '${customer['fullName']}',
+                      customerId: customer['id'],
+                    ),
+                    _buildTableRowText(
+                      title: customer['phone'],
+                      customerId: customer['id'],
+                    ),
+                    _buildTableRowText(
+                      title: customer['mobile'],
+                      customerId: customer['id'],
+                    ),
+                    _buildTableRowText(
+                      title: customer['email'],
+                      customerId: customer['id'],
+                    ),
+                    _buildTableRowText(
+                      title: customer['address'],
+                      customerId: customer['id'],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButtonWidget(
+                          icon: Icons.edit_outlined,
+                          padding: 5,
+                          ontap: () {
+                            // Dialog Box
+                            editCustomerDialogBox(
+                              context: context,
+                              viewModel: viewModel,
+                              customerId: customer['id'],
+                              firstName: customer['firstName'],
+                              lastName: customer['lastName'],
+                              secondaryName: customer['secondaryName'],
+                              secondaryLastName: customer['secondaryLastName'],
+                              phone: customer['phone'],
+                              mobile: customer['mobile'],
+                              email: customer['email'],
+                              address: customer['address'],
+                              unit: customer['unit'],
+                            );
+                          },
+                        ),
+                        SizedBox(width: 10),
+                        IconButtonWidget(
+                          icon: Icons.delete_outline,
+                          padding: 5,
+                          ontap: () {
+                            // Dialog Box
+                            deleteCustomerDialogBox(
+                              context: context,
+                              viewModel: viewModel,
+                              customerId: customer['id'],
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 );
@@ -407,12 +652,25 @@ class _CustomersPageState extends State<CustomersPage> {
   );
 
   // Row Text
-  Widget _buildTableRowText({required title}) => Padding(
-    padding: EdgeInsets.all(10),
-    child: Text(
-      title,
-      textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 13),
-    ),
-  );
+  Widget _buildTableRowText({required title, required String customerId}) =>
+      InkWell(
+        hoverColor: Colors.transparent, // No color on hover
+        splashColor: Colors.transparent, // No splash on click
+        highlightColor: Colors.transparent, // No highlight on tap down
+        mouseCursor: SystemMouseCursors.click, // Change to hand cursor
+        onTap: () {
+          context.goNamed(
+            RouteNames.customerDashboardPage,
+            queryParameters: {'customerId': customerId},
+          );
+        },
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 13),
+          ),
+        ),
+      );
 }

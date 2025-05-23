@@ -1,9 +1,11 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:sws_crm_v5/models/user_model.dart';
 import 'package:sws_crm_v5/utils/app_colors.dart';
+import 'package:sws_crm_v5/utils/routes/route_names.dart';
 import 'package:sws_crm_v5/view%20models/App%20Settings/app_settings_user_page_view_model.dart';
 import 'package:sws_crm_v5/widgets/button_widget.dart';
 import 'package:sws_crm_v5/widgets/dialog_box_widget.dart';
@@ -28,8 +30,6 @@ class _AppSettingsUserPageState extends State<AppSettingsUserPage> {
   final _emailController = TextEditingController();
   final _departmentController = TextEditingController();
 
-  String selectedRoleValue = 'Finance Manager';
-  String selectedStatusValue = 'Active';
   int selectedMenuIndex = 0;
   List<Map<String, dynamic>> menusList = [
     {'icon': Icons.apps, 'title': 'All', 'value': 'All'},
@@ -85,95 +85,7 @@ class _AppSettingsUserPageState extends State<AppSettingsUserPage> {
                         title: 'Add User',
                         icon: Icons.add,
                         ontap: () {
-                          DialogBoxWidget.show(
-                            parentContext: context,
-                            title: 'Add New User',
-                            isBackOnSave: false,
-                            dialogBoxHeight: 500,
-
-                            content: Form(
-                              key: _formKey,
-                              child: Column(
-                                children: [
-                                  TextFieldWidget(
-                                    title: 'First Name',
-                                    controller: _firstNameController,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'First Name is required';
-                                      }
-
-                                      return null;
-                                    },
-                                  ),
-                                  TextFieldWidget(
-                                    title: 'Last Name',
-                                    controller: _lastNameController,
-                                  ),
-                                  TextFieldWidget(
-                                    title: 'Email',
-                                    controller: _emailController,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Email is required';
-                                      }
-
-                                      if (!RegExp(
-                                        r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$',
-                                      ).hasMatch(value)) {
-                                        return 'Please enter a valid email';
-                                      }
-
-                                      return null;
-                                    },
-                                  ),
-                                  DropdownWidget(
-                                    title: 'Role',
-                                    items: viewModel.roleValuesList,
-                                    value: selectedRoleValue,
-                                    onChanged: (String? newValue) {
-                                      selectedRoleValue = newValue!;
-                                      setState(() {});
-                                    },
-                                    itemLabelBuilder: (item) => item,
-                                  ),
-                                  TextFieldWidget(
-                                    title: 'Department',
-                                    controller: _departmentController,
-                                  ),
-                                  DropdownWidget(
-                                    title: 'Status',
-                                    items: viewModel.statusValuesList,
-                                    value: selectedStatusValue,
-                                    onChanged: (String? newValue) {
-                                      selectedStatusValue = newValue!;
-                                      setState(() {});
-                                    },
-                                    itemLabelBuilder: (item) => item,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            onSave: (dialogBoxContext) async {
-                              final viewModel =
-                                  Provider.of<AppSettingsUserPageViewModel>(
-                                    context,
-                                    listen: false,
-                                  );
-                              if (_formKey.currentState!.validate()) {
-                                await viewModel.createUser(
-                                  context: context,
-                                  dialogBoxContext: dialogBoxContext,
-                                  firstName: _firstNameController.text,
-                                  lastName: _lastNameController.text,
-                                  email: _emailController.text,
-                                  role: selectedRoleValue,
-                                  department: _departmentController.text,
-                                  status: selectedStatusValue,
-                                );
-                              }
-                            },
-                          );
+                          addUserDialogBox(viewModel: viewModel);
                         },
                       ),
 
@@ -344,20 +256,23 @@ class _AppSettingsUserPageState extends State<AppSettingsUserPage> {
                   children: [
                     _buildTableRowText(
                       title: '${user.firstName} ${user.lastName}',
+                      userId: '',
                     ),
-                    _buildTableRowText(title: user.email),
-                    _buildTableRowText(title: user.phone),
-                    _buildTableRowText(title: user.role),
-                    _buildTableRowText(title: user.secondaryRole),
+                    _buildTableRowText(title: user.email, userId: ''),
+                    _buildTableRowText(title: user.phone, userId: ''),
+                    _buildTableRowText(title: user.role, userId: ''),
+                    _buildTableRowText(title: user.secondaryRole, userId: ''),
                     _buildTableRowText(
                       title:
                           user.vendors.isEmpty ? '' : user.vendors.toString(),
+                      userId: '',
                     ),
                     _buildTableRowText(
                       title:
                           user.troubleShooting.isEmpty
                               ? ''
                               : user.troubleShooting.toString(),
+                      userId: '',
                     ),
 
                     Container(
@@ -391,13 +306,35 @@ class _AppSettingsUserPageState extends State<AppSettingsUserPage> {
                       spacing: 10,
                       children: [
                         IconButtonWidget(
-                          ontap: () {},
+                          ontap: () {
+                            editUserDialogBox(
+                              context: context,
+                              viewModel: viewModel,
+                              userId: user.id,
+                              firstName: user.firstName,
+                              lastName: user.lastName,
+                              phone: user.phone,
+                              email: user.email,
+                              role: user.role,
+                              department: user.department,
+                              status: user.status,
+                              secondaryRole: user.secondaryRole,
+                              vendors: user.vendors,
+                              troubleShooting: user.troubleShooting,
+                            );
+                          },
                           icon: Icons.edit_outlined,
                           size: 20,
                           padding: 5,
                         ),
                         IconButtonWidget(
-                          ontap: () {},
+                          ontap: () {
+                            deleteUserDialogBox(
+                              context: context,
+                              viewModel: viewModel,
+                              userId: user.id,
+                            );
+                          },
                           icon: Icons.delete_outline,
                           size: 20,
                           padding: 5,
@@ -426,14 +363,274 @@ class _AppSettingsUserPageState extends State<AppSettingsUserPage> {
   );
 
   // Row Text
-  Widget _buildTableRowText({required title}) => Padding(
-    padding: EdgeInsets.all(10),
-    child: Text(
-      title,
-      textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 13),
-    ),
-  );
+  Widget _buildTableRowText({required title, required String userId}) =>
+      GestureDetector(
+        onTap: () {
+          // context.goNamed(
+          //   RouteNames.customerDashboardPage,
+          //   queryParameters: {'userId': userId},
+          // );
+        },
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 13),
+          ),
+        ),
+      );
+
+  // Edit user dialog box
+  Future<void> addUserDialogBox({
+    // required BuildContext context,
+    required AppSettingsUserPageViewModel viewModel,
+    // required String userId,
+  }) {
+    return DialogBoxWidget.show(
+      parentContext: context,
+      title: 'Add New User',
+      isBackOnSave: false,
+      dialogBoxHeight: 500,
+
+      content: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            TextFieldWidget(
+              title: 'First Name',
+              controller: _firstNameController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'First Name is required';
+                }
+
+                return null;
+              },
+            ),
+            TextFieldWidget(
+              title: 'Last Name',
+              controller: _lastNameController,
+            ),
+            TextFieldWidget(
+              title: 'Email',
+              controller: _emailController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Email is required';
+                }
+
+                if (!RegExp(
+                  r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$',
+                ).hasMatch(value)) {
+                  return 'Please enter a valid email';
+                }
+
+                return null;
+              },
+            ),
+            DropdownWidget(
+              title: 'Role',
+              items: viewModel.roleValuesList,
+              value: viewModel.selectedRoleValue,
+              onChanged: (String? newValue) {
+                viewModel.selectedRoleValue = newValue!;
+                setState(() {});
+              },
+              itemLabelBuilder: (item) => item,
+            ),
+            TextFieldWidget(
+              title: 'Department',
+              controller: _departmentController,
+            ),
+            DropdownWidget(
+              title: 'Status',
+              items: viewModel.statusValuesList,
+              value: viewModel.selectedStatusValue,
+              onChanged: (String? newValue) {
+                viewModel.selectedStatusValue = newValue!;
+                setState(() {});
+              },
+              itemLabelBuilder: (item) => item,
+            ),
+          ],
+        ),
+      ),
+      onSave: (dialogBoxContext) async {
+        final viewModel = Provider.of<AppSettingsUserPageViewModel>(
+          context,
+          listen: false,
+        );
+        if (_formKey.currentState!.validate()) {
+          await viewModel.createUser(
+            context: context,
+            dialogBoxContext: dialogBoxContext,
+            firstName: _firstNameController.text,
+            lastName: _lastNameController.text,
+            email: _emailController.text,
+            role: viewModel.selectedRoleValue,
+            department: _departmentController.text,
+            status: viewModel.selectedStatusValue,
+          );
+        }
+      },
+    );
+  }
+
+  // Edit user dialog box
+  Future<void> editUserDialogBox({
+    required BuildContext context,
+    required AppSettingsUserPageViewModel viewModel,
+    required String userId,
+    required String firstName,
+    required String lastName,
+    required String phone,
+    required String email,
+    required String role,
+    required String department,
+    required String status,
+    required String secondaryRole,
+    required List<String> vendors,
+    required List<String> troubleShooting,
+  }) {
+    final TextEditingController firstNameController = TextEditingController(
+      text: firstName,
+    );
+    final TextEditingController lastNameController = TextEditingController(
+      text: lastName,
+    );
+    final TextEditingController emailController = TextEditingController(
+      text: email,
+    );
+    final TextEditingController departmentController = TextEditingController(
+      text: department,
+    );
+    viewModel.selectedRoleValue = role;
+    viewModel.selectedStatusValue = status;
+    return DialogBoxWidget.show(
+      parentContext: context,
+      title: 'Edit User',
+      saveButtonText: 'Update',
+      isBackOnSave: false,
+      dialogBoxHeight: 500,
+      content: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            TextFieldWidget(
+              title: 'First Name',
+              controller: firstNameController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'First Name is required';
+                }
+
+                return null;
+              },
+            ),
+            TextFieldWidget(title: 'Last Name', controller: lastNameController),
+            TextFieldWidget(
+              title: 'Email',
+              controller: emailController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Email is required';
+                }
+
+                if (!RegExp(
+                  r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$',
+                ).hasMatch(value)) {
+                  return 'Please enter a valid email';
+                }
+
+                return null;
+              },
+            ),
+            DropdownWidget(
+              title: 'Role',
+              items: viewModel.roleValuesList,
+              value: viewModel.selectedRoleValue,
+              onChanged: (String? newValue) {
+                viewModel.selectedRoleValue = newValue!;
+                setState(() {});
+              },
+              itemLabelBuilder: (item) => item,
+            ),
+            TextFieldWidget(
+              title: 'Department',
+              controller: departmentController,
+            ),
+            DropdownWidget(
+              title: 'Status',
+              items: viewModel.statusValuesList,
+              value: viewModel.selectedStatusValue,
+              onChanged: (String? newValue) {
+                viewModel.selectedStatusValue = newValue!;
+                setState(() {});
+              },
+              itemLabelBuilder: (item) => item,
+            ),
+          ],
+        ),
+      ),
+      onSave: (dialogBoxContext) async {
+        final userDetails = UserModel(
+          id: userId,
+          firstName: firstNameController.text,
+          lastName: lastNameController.text,
+          phone: phone,
+          email: emailController.text,
+          role: viewModel.selectedRoleValue,
+          department: departmentController.text,
+          status: viewModel.selectedStatusValue,
+          secondaryRole: secondaryRole,
+          vendors: vendors,
+          troubleShooting: troubleShooting,
+        );
+
+        if (_formKey.currentState!.validate()) {
+          await viewModel.editUser(
+            parentContext: context,
+            dialogBoxContext: dialogBoxContext,
+            userId: userId,
+            userDetails: userDetails.toJson(),
+          );
+        }
+      },
+    );
+  }
+
+  // Delete user dialog box
+  Future<void> deleteUserDialogBox({
+    required BuildContext context,
+    required AppSettingsUserPageViewModel viewModel,
+    required String userId,
+  }) {
+    return DialogBoxWidget.show(
+      parentContext: context,
+      title: 'Delete User',
+      saveButtonText: 'Delete',
+      isBackOnSave: false,
+      dialogBoxHeight: 200,
+      content: Column(
+        children: [
+          SizedBox(height: 50),
+          Text(
+            'Are you sure you want to delete this user?',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, color: AppColors.lightGreenText),
+          ),
+        ],
+      ),
+      onSave: (dialogBoxContext) async {
+        await viewModel.deleteUser(
+          parentContext: context,
+          dialogBoxContext: dialogBoxContext,
+          userId: userId,
+        );
+      },
+    );
+  }
 }
 
 

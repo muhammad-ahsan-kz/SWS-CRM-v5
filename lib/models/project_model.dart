@@ -39,6 +39,7 @@ class ProjectModel {
   /// For uploading or updating the document (excluding docId)
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
       'description': description,
       'address': address,

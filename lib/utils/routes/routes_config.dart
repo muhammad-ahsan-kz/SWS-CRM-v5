@@ -213,11 +213,11 @@ class MyAppRouter {
           ),
           GoRoute(
             name: RouteNames.customerProjectDetailsPage,
-            path: '/customer-project-details/:projectName',
+            path: '/customer-project-details/:projectId',
             pageBuilder: (context, state) {
-              final String projectName = state.pathParameters['projectName']!;
+              final String projectId = state.pathParameters['projectId']!;
               return MaterialPage(
-                child: CustomerProjectDetailsPage(projectName: projectName),
+                child: CustomerProjectDetailsPage(projectId: projectId),
               );
             },
           ),

@@ -45,11 +45,16 @@ class CustomersPageViewModel with ChangeNotifier {
 
               return {
                 'id': data.id,
+                'firstName': data.firstName,
+                'lastName': data.lastName,
+                'secondaryName': data.secondaryName,
+                'secondaryLastName': data.secondaryLastName,
                 'fullName': '${data.firstName} ${data.lastName}',
                 'phone': data.phone,
                 'mobile': data.mobile,
                 'email': data.email,
                 'address': data.address,
+                'unit': data.unit,
               };
             }).toList();
           });
@@ -60,6 +65,64 @@ class CustomersPageViewModel with ChangeNotifier {
         type: NotificationType.error,
       );
       return const Stream.empty();
+    }
+  }
+
+  // Edit customer
+  Future<void> editCustomer({
+    required BuildContext parentContext,
+    required BuildContext dialogBoxContext,
+    required String customerId, // 🔥 Pass the document ID
+    required Map<String, dynamic> customerDetails,
+  }) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection(FirestoreVariables.customersCollection)
+          .doc(customerId) // 👈 Update existing doc by ID
+          .update(customerDetails); // 👈 Use .update
+
+      Navigator.of(dialogBoxContext).pop();
+
+      NotificationService.show(
+        parentContext,
+        message: 'Customer Successfully Updated',
+        type: NotificationType.success,
+      );
+    } catch (error) {
+      Navigator.of(dialogBoxContext).pop();
+      NotificationService.show(
+        parentContext,
+        message: 'Error Updating Customer',
+        type: NotificationType.error,
+      );
+    }
+  }
+
+  // Delete customer
+  Future<void> deleteCustomer({
+    required BuildContext parentContext,
+    required BuildContext dialogBoxContext,
+    required String customerId,
+  }) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection(FirestoreVariables.customersCollection)
+          .doc(customerId)
+          .delete();
+      Navigator.of(dialogBoxContext).pop();
+
+      NotificationService.show(
+        parentContext,
+        message: 'Customer Successfully Deleted',
+        type: NotificationType.success,
+      );
+    } catch (error) {
+      Navigator.of(dialogBoxContext).pop();
+      NotificationService.show(
+        parentContext,
+        message: 'Error Deleting Customer',
+        type: NotificationType.error,
+      );
     }
   }
 }

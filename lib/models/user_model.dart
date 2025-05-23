@@ -1,4 +1,5 @@
 class UserModel {
+  final String id;
   final String firstName;
   final String lastName;
   final String email;
@@ -11,6 +12,7 @@ class UserModel {
   final List<String> troubleShooting;
 
   UserModel({
+    required this.id,
     required this.firstName,
     required this.lastName,
     required this.email,
@@ -24,24 +26,29 @@ class UserModel {
   });
 
   // Factory constructor to create a UserModel from a Map (e.g., Firestore or JSON)
-  factory UserModel.fromJson(Map<String, dynamic> map) {
+  factory UserModel.fromJson({
+    required Map<String, dynamic> data,
+    required String userId,
+  }) {
     return UserModel(
-      firstName: map['firstName'] ?? '',
-      lastName: map['lastName'] ?? '',
-      email: map['email'] ?? '',
-      role: map['role'] ?? '',
-      department: map['department'] ?? '',
-      status: map['status'] ?? '',
-      phone: map['phone'] ?? '',
-      secondaryRole: map['secondaryRole'] ?? '',
-      vendors: List<String>.from(map['vendors'] ?? []),
-      troubleShooting: List<String>.from(map['troubleShooting'] ?? []),
+      id: userId,
+      firstName: data['firstName'] ?? '',
+      lastName: data['lastName'] ?? '',
+      email: data['email'] ?? '',
+      role: data['role'] ?? '',
+      department: data['department'] ?? '',
+      status: data['status'] ?? '',
+      phone: data['phone'] ?? '',
+      secondaryRole: data['secondaryRole'] ?? '',
+      vendors: List<String>.from(data['vendors'] ?? []),
+      troubleShooting: List<String>.from(data['troubleShooting'] ?? []),
     );
   }
 
   // Method to convert a UserModel to a Map
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'firstName': firstName,
       'lastName': lastName,
       'email': email,

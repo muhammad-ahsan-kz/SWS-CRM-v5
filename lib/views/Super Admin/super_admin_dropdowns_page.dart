@@ -35,6 +35,18 @@ class _SuperAdminDropdownsPageState extends State<SuperAdminDropdownsPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      final viewModel = Provider.of<SuperAdminDropDownPageViewModel>(
+        context,
+        listen: false,
+      );
+      viewModel.fetchAllDropdownsList();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<SuperAdminDropDownPageViewModel>(
       context,
@@ -81,6 +93,7 @@ class _SuperAdminDropdownsPageState extends State<SuperAdminDropdownsPage> {
                                       TextFieldWidget(
                                         title: 'Dropdown',
                                         controller: _dropdownNameController,
+
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
                                             return 'Dropdown name is required';
@@ -88,10 +101,19 @@ class _SuperAdminDropdownsPageState extends State<SuperAdminDropdownsPage> {
                                           return null;
                                         },
                                       ),
-                                      const SizedBox(height: 16),
-
+                                      const SizedBox(height: 10),
+                                      Text(
+                                        'Type',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.primaryGreen,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5),
                                       // Type Input + Add Button
                                       Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Expanded(
                                             child: TextFormField(
@@ -103,9 +125,107 @@ class _SuperAdminDropdownsPageState extends State<SuperAdminDropdownsPage> {
                                                 }
                                                 return null;
                                               },
-                                              decoration: const InputDecoration(
-                                                labelText: 'Add Type',
-                                                border: OutlineInputBorder(),
+                                              decoration: InputDecoration(
+                                                // labelText: 'Add Type',
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                suffixIcon: PopupMenuButton<
+                                                  String
+                                                >(
+                                                  icon: Icon(
+                                                    Icons.arrow_drop_down,
+                                                  ),
+                                                  constraints: BoxConstraints(
+                                                    maxHeight: 300,
+                                                  ),
+                                                  tooltip:
+                                                      'Select from existing types',
+                                                  onSelected: (
+                                                    String selected,
+                                                  ) {
+                                                    if (!_dropdownTypeList
+                                                        .contains(selected)) {
+                                                      setState(() {
+                                                        _dropdownTypeList.add(
+                                                          selected,
+                                                        );
+                                                      });
+                                                    }
+                                                  },
+                                                  itemBuilder: (
+                                                    BuildContext context,
+                                                  ) {
+                                                    return viewModel.dropdownsList.map((
+                                                      type,
+                                                    ) {
+                                                      return PopupMenuItem<
+                                                        String
+                                                      >(
+                                                        child: StatefulBuilder(
+                                                          builder: (
+                                                            context,
+                                                            localSetState,
+                                                          ) {
+                                                            final isChecked =
+                                                                _dropdownTypeList
+                                                                    .contains(
+                                                                      type,
+                                                                    );
+                                                            return InkWell(
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  if (isChecked) {
+                                                                    _dropdownTypeList
+                                                                        .remove(
+                                                                          type,
+                                                                        );
+                                                                  } else {
+                                                                    _dropdownTypeList
+                                                                        .add(
+                                                                          type,
+                                                                        );
+                                                                  }
+                                                                });
+                                                                localSetState(
+                                                                  () {},
+                                                                );
+                                                              },
+                                                              child: Row(
+                                                                children: [
+                                                                  Checkbox(
+                                                                    value:
+                                                                        isChecked,
+                                                                    onChanged: (
+                                                                      _,
+                                                                    ) {
+                                                                      setState(() {
+                                                                        if (isChecked) {
+                                                                          _dropdownTypeList.remove(
+                                                                            type,
+                                                                          );
+                                                                        } else {
+                                                                          _dropdownTypeList.add(
+                                                                            type,
+                                                                          );
+                                                                        }
+                                                                      });
+                                                                      localSetState(
+                                                                        () {},
+                                                                      );
+                                                                    },
+                                                                  ),
+                                                                  Text(type),
+                                                                ],
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      );
+                                                    }).toList();
+                                                  },
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -114,6 +234,7 @@ class _SuperAdminDropdownsPageState extends State<SuperAdminDropdownsPage> {
                                             title: 'Add',
                                             horizontalPadding: 20,
                                             verticalPadding: 10,
+
                                             onTap: () {
                                               final type =
                                                   _dropdownTypeController.text
@@ -124,6 +245,12 @@ class _SuperAdminDropdownsPageState extends State<SuperAdminDropdownsPage> {
                                                   )) {
                                                 setState(() {
                                                   _dropdownTypeList.add(type);
+                                                  if (!viewModel.dropdownsList
+                                                      .contains(type)) {
+                                                    viewModel.dropdownsList.add(
+                                                      type,
+                                                    );
+                                                  }
                                                   _dropdownTypeController
                                                       .clear();
                                                 });
@@ -132,6 +259,7 @@ class _SuperAdminDropdownsPageState extends State<SuperAdminDropdownsPage> {
                                           ),
                                         ],
                                       ),
+
                                       const SizedBox(height: 12),
 
                                       // Show List as Chips
@@ -298,7 +426,7 @@ class _SuperAdminDropdownsPageState extends State<SuperAdminDropdownsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '$selectedType Dropdowns',
+                          '$selectedType',
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,

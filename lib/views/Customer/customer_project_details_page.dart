@@ -7,8 +7,8 @@ import 'package:sws_crm_v5/widgets/icon_button_widget.dart';
 import '../../utils/app_colors.dart';
 
 class CustomerProjectDetailsPage extends StatelessWidget {
-  final String projectName;
-  const CustomerProjectDetailsPage({super.key, required this.projectName});
+  final String projectId;
+  const CustomerProjectDetailsPage({super.key, required this.projectId});
 
   @override
   Widget build(BuildContext context) {

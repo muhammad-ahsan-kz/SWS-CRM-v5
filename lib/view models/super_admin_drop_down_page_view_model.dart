@@ -5,6 +5,8 @@ import 'package:sws_crm_v5/utils/firestore_variables.dart';
 import 'package:sws_crm_v5/widgets/popup_message_widget.dart';
 
 class SuperAdminDropDownPageViewModel with ChangeNotifier {
+  List<String> dropdownsList = [];
+
   Future<void> addNewDropdown({
     required BuildContext parentContext,
     required BuildContext dialogBoxContext,
@@ -87,6 +89,28 @@ class SuperAdminDropDownPageViewModel with ChangeNotifier {
         type: NotificationType.error,
       );
       return const Stream.empty();
+    }
+  }
+
+  // Fetch all dropdowns list
+  Future<void> fetchAllDropdownsList() async {
+    try {
+      final querySnapshot =
+          await FirebaseFirestore.instance
+              .collection(FirestoreVariables.dropdownsCollection)
+              .get();
+
+      // Extract and assign type fields
+      dropdownsList =
+          querySnapshot.docs
+              .map((doc) => doc.data()['type']?.toString() ?? '')
+              .where((type) => type.isNotEmpty)
+              .toSet() // Remove duplicates if any
+              .toList();
+
+      notifyListeners(); // 🔄 Optional if using with dropdown UI updates
+    } catch (error) {
+      debugPrint('Error fetching dropdown types: $error');
     }
   }
 }

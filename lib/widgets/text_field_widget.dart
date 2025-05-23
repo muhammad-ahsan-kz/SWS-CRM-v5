@@ -9,6 +9,7 @@ class TextFieldWidget extends StatelessWidget {
   final bool obscureText;
   final bool isTextFieldEnabled;
   final String hintText;
+  // final String? initialValue;
 
   const TextFieldWidget({
     super.key,
@@ -19,6 +20,7 @@ class TextFieldWidget extends StatelessWidget {
     this.obscureText = false,
     this.isTextFieldEnabled = true,
     this.hintText = '',
+    // this.initialValue,
   });
 
   @override
@@ -40,6 +42,7 @@ class TextFieldWidget extends StatelessWidget {
           obscureText: obscureText,
           enabled: isTextFieldEnabled,
 
+          // initialValue: initialValue ?? '',
           validator: validator,
           decoration: InputDecoration(
             hintText: hintText,

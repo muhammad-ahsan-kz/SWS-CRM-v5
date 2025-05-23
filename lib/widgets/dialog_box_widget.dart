@@ -4,6 +4,7 @@ import 'package:sws_crm_v5/widgets/icon_button_widget.dart';
 
 class DialogBoxWidget extends StatelessWidget {
   final String title;
+  final String saveButtonText;
   final Widget content;
   final void Function(BuildContext dialogBoxContext) onSave;
   final double dialogBoxHeight;
@@ -14,6 +15,7 @@ class DialogBoxWidget extends StatelessWidget {
   const DialogBoxWidget({
     super.key,
     required this.title,
+    this.saveButtonText = 'Save',
     required this.content,
     required this.onSave,
     this.dialogBoxHeight = 600,
@@ -68,7 +70,7 @@ class DialogBoxWidget extends StatelessWidget {
                     backgroundColor: AppColors.background,
                     foregroundColor: AppColors.white,
                   ),
-                  child: const Text('Save'),
+                  child: Text(saveButtonText),
                 ),
               ],
     );
@@ -78,6 +80,7 @@ class DialogBoxWidget extends StatelessWidget {
   static Future<void> show({
     required BuildContext parentContext,
     required String title,
+    String saveButtonText = 'Save',
     required Widget content,
     required void Function(BuildContext dialogBoxContext) onSave,
     bool isBackOnSave = true,
@@ -91,6 +94,7 @@ class DialogBoxWidget extends StatelessWidget {
       builder:
           (ctx) => DialogBoxWidget(
             title: title,
+            saveButtonText: saveButtonText,
             content: content,
             onSave: onSave,
             isBackOnSave: isBackOnSave,

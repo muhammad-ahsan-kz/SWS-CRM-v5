@@ -21,10 +21,11 @@ class NewButton extends StatelessWidget {
         InkWell(
           onTap: ontap,
           borderRadius: BorderRadius.circular(50),
+          hoverColor: AppColors.background.withValues(alpha: 0.3),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
             decoration: BoxDecoration(
-              color: backgroundColor.withValues(alpha: .1),
+              // color: backgroundColor.withValues(alpha: .1),
               borderRadius: BorderRadius.circular(50),
             ),
             child: Row(
@@ -36,7 +37,7 @@ class NewButton extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(width: 15),
+        SizedBox(width: 5),
       ],
     );
   }

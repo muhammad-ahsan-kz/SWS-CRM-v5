@@ -71,6 +71,12 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
                     screenWidth: screenWidth,
                     viewModel: viewModel,
                   ),
+                  SizedBox(
+                    height: screenHeight * 0.7,
+                    child: VerticalDivider(
+                      // color: AppColors.greenBorder
+                    ),
+                  ),
                   _buildCustomerProjects(
                     context: context,
                     screenHeight: screenHeight,
@@ -153,7 +159,7 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
 
             NewButton(
               title: 'Add Project',
-              icon: Icons.add,
+              icon: Icons.add_circle_outline,
               ontap: () {
                 // Dialog Box
                 addNewProjectDialogBox(
@@ -163,6 +169,22 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
                   currentPage: currentPage,
                 );
               },
+            ),
+            NewButton(
+              title: 'Notes',
+              icon: Icons.note_add_outlined,
+              ontap: () {},
+            ),
+            NewButton(title: 'Edit', icon: Icons.edit_outlined, ontap: () {}),
+            NewButton(
+              title: 'Delete',
+              icon: Icons.delete_outline,
+              ontap: () {},
+            ),
+            NewButton(
+              title: 'Files',
+              icon: Icons.file_open_outlined,
+              ontap: () {},
             ),
           ],
         ),
@@ -177,23 +199,23 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
     required CustomerDashboardPageViewModel viewModel,
   }) {
     return Material(
-      elevation: 5,
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(15),
-        bottomLeft: Radius.circular(15),
-      ),
+      // elevation: 5,
+      // borderRadius: BorderRadius.only(
+      //   topLeft: Radius.circular(15),
+      //   bottomLeft: Radius.circular(15),
+      // ),
       child: Container(
         height: screenHeight * 0.7,
-        width: screenWidth * 0.15,
+        width: screenWidth * 0.20,
         padding: EdgeInsets.all(15),
         decoration: BoxDecoration(
-          color: AppColors.white,
-          border: Border.all(color: AppColors.greyBorder),
-          // borderRadius: BorderRadius.circular(15),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(15),
-            bottomLeft: Radius.circular(15),
-          ),
+          // color: AppColors.white,
+          // border: Border.all(color: AppColors.greyBorder),
+          // // borderRadius: BorderRadius.circular(15),
+          // borderRadius: BorderRadius.only(
+          //   topLeft: Radius.circular(15),
+          //   bottomLeft: Radius.circular(15),
+          // ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,7 +237,7 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
               ),
               builder: (context, snapshot) {
                 return SizedBox(
-                  height: screenHeight * 0.3,
+                  height: screenHeight * 0.6,
                   child: Column(
                     children: [
                       _buildDetailsRow(
@@ -254,56 +276,56 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
                 child: LoadingAnimationWidget(height: 100, width: 200),
               ),
             ),
-            Text(
-              'Actions',
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.end,
-              style: TextStyle(
-                color: AppColors.primaryGreen,
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Divider(),
-            SizedBox(height: 10),
-            Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: [
-                _buildActionsRow(
-                  icon: Icons.note_outlined,
-                  title: 'Notes',
-                  onTap: () {
-                    // DialogBoxWidget(
-                    //   title: 'Notes',
-                    //   onSave: () {},
-                    //   onCancel: () {},
-                    //   child: Column(children: []),
-                    // );
-                  },
-                ),
-                _buildActionsRow(
-                  icon: Icons.edit_outlined,
-                  title: 'Edit',
-                  onTap: () {},
-                ),
-                _buildActionsRow(
-                  icon: Icons.delete_outline,
-                  title: 'Delete',
-                  onTap: () {},
-                ),
-                _buildActionsRow(
-                  icon: Icons.file_copy_outlined,
-                  title: 'Files',
-                  onTap: () {},
-                ),
-                _buildActionsRow(
-                  icon: Icons.dashboard_customize_outlined,
-                  title: 'New Project',
-                  onTap: () {},
-                ),
-              ],
-            ),
+            // Text(
+            //   'Actions',
+            //   overflow: TextOverflow.ellipsis,
+            //   textAlign: TextAlign.end,
+            //   style: TextStyle(
+            //     color: AppColors.primaryGreen,
+            //     fontSize: 15,
+            //     fontWeight: FontWeight.bold,
+            //   ),
+            // ),
+            // Divider(),
+            // SizedBox(height: 10),
+            // Wrap(
+            //   spacing: 10,
+            //   runSpacing: 10,
+            //   children: [
+            //     _buildActionsRow(
+            //       icon: Icons.note_outlined,
+            //       title: 'Notes',
+            //       onTap: () {
+            //         // DialogBoxWidget(
+            //         //   title: 'Notes',
+            //         //   onSave: () {},
+            //         //   onCancel: () {},
+            //         //   child: Column(children: []),
+            //         // );
+            //       },
+            //     ),
+            //     _buildActionsRow(
+            //       icon: Icons.edit_outlined,
+            //       title: 'Edit',
+            //       onTap: () {},
+            //     ),
+            //     _buildActionsRow(
+            //       icon: Icons.delete_outline,
+            //       title: 'Delete',
+            //       onTap: () {},
+            //     ),
+            //     _buildActionsRow(
+            //       icon: Icons.file_copy_outlined,
+            //       title: 'Files',
+            //       onTap: () {},
+            //     ),
+            //     _buildActionsRow(
+            //       icon: Icons.dashboard_customize_outlined,
+            //       title: 'New Project',
+            //       onTap: () {},
+            //     ),
+            //   ],
+            // ),
           ],
         ),
       ),
@@ -336,12 +358,13 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
             width: screenWidth,
             child: Text(
               value,
+              maxLines: 3,
               overflow: TextOverflow.ellipsis,
               // textAlign: TextAlign.end,
               style: TextStyle(
-                color: AppColors.primaryGreen,
+                color: AppColors.grey,
                 fontSize: 12,
-                fontWeight: FontWeight.bold,
+                // fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -383,25 +406,25 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
     required double screenWidth,
     required CustomerDashboardPageViewModel viewModel,
   }) => Material(
-    elevation: 5,
-    borderRadius: BorderRadius.only(
-      topRight: Radius.circular(15),
-      bottomRight: Radius.circular(15),
-    ),
+    // elevation: 5,
+    // borderRadius: BorderRadius.only(
+    //   topRight: Radius.circular(15),
+    //   bottomRight: Radius.circular(15),
+    // ),
     child: Container(
       height: screenHeight * 0.7,
-      width: screenWidth * 0.65,
+      width: screenWidth * 0.60,
       decoration: BoxDecoration(
-        color: AppColors.white,
-        border: Border(
-          top: BorderSide(color: AppColors.greenBorder),
-          bottom: BorderSide(color: AppColors.greenBorder),
-          right: BorderSide(color: AppColors.greenBorder),
-        ),
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(15),
-          bottomRight: Radius.circular(15),
-        ),
+        // color: AppColors.white,
+        // border: Border(
+        //   top: BorderSide(color: AppColors.greenBorder),
+        //   bottom: BorderSide(color: AppColors.greenBorder),
+        //   right: BorderSide(color: AppColors.greenBorder),
+        // ),
+        // borderRadius: BorderRadius.only(
+        //   topRight: Radius.circular(15),
+        //   bottomRight: Radius.circular(15),
+        // ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(15),
@@ -427,23 +450,167 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
               ),
               // isEmpty: (data) => data == null || data.isEmpty,
               builder: (context, projectsList) {
-                return Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
-                  children:
-                      projectsList.map((project) {
-                        return _buildProjectsRow(
-                          projectName: project.name,
-                          projectDescription: project.description,
-                          onTap: () {
-                            context.goNamed(
-                              RouteNames.customerProjectDetailsPage,
-                              pathParameters: {'projectName': project.name},
-                            );
-                          },
+                return SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Table(
+                    border: TableBorder.all(
+                      color: Colors.grey.shade400,
+                      width: 1,
+                    ),
+                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                    columnWidths: const {
+                      0: FlexColumnWidth(),
+                      1: FlexColumnWidth(),
+                      2: FlexColumnWidth(),
+                      // 3: FlexColumnWidth(),
+                      // 4: FlexColumnWidth(),
+                      // 5: FlexColumnWidth(),
+                      // 6: FlexColumnWidth(),
+                      // 7: FlexColumnWidth(),
+                    },
+                    children: [
+                      // Table Header
+                      TableRow(
+                        // decoration: BoxDecoration(color: Colors.grey.shade200),
+                        children: [
+                          _buildTableColumnText(title: 'Name'),
+                          _buildTableColumnText(title: 'Description'),
+                          _buildTableColumnText(title: 'Address'),
+                          _buildTableColumnText(title: 'Actions'),
+                          // _buildTableColumnText(title: 'Secondary Role'),
+                          // _buildTableColumnText(title: 'Vendors'),
+                          // _buildTableColumnText(title: 'Trouble Shooting'),
+                          // _buildTableColumnText(title: 'Status'),
+                          // _buildTableColumnText(title: 'Actions'),
+                        ],
+                      ),
+                      // Table Rows
+                      ...projectsList.map((project) {
+                        return TableRow(
+                          children: [
+                            _buildTableRowText(
+                              title: project.name,
+                              projectId: project.id ?? '',
+                            ),
+                            _buildTableRowText(
+                              title: project.description,
+                              projectId: project.id ?? '',
+                            ),
+                            _buildTableRowText(
+                              title: project.address,
+                              projectId: project.id ?? '',
+                            ),
+                            // _buildTableRowText(title: user.role, userId: ''),
+                            // _buildTableRowText(
+                            //   title: user.secondaryRole,
+                            //   userId: '',
+                            // ),
+                            // _buildTableRowText(
+                            //   title:
+                            //       user.vendors.isEmpty
+                            //           ? ''
+                            //           : user.vendors.toString(),
+                            //   userId: '',
+                            // ),
+                            // _buildTableRowText(
+                            //   title:
+                            //       user.troubleShooting.isEmpty
+                            //           ? ''
+                            //           : user.troubleShooting.toString(),
+                            //   userId: '',
+                            // ),
+
+                            // Container(
+                            //   padding: EdgeInsets.symmetric(
+                            //     horizontal: 5,
+                            //     vertical: 10,
+                            //   ),
+                            //   decoration: BoxDecoration(
+                            //     color:
+                            //         user.status == 'Active'
+                            //             ? AppColors.lightGreen.withValues(
+                            //               alpha: .3,
+                            //             )
+                            //             : AppColors.red.withValues(alpha: .3),
+                            //   ),
+                            //   child: Row(
+                            //     mainAxisAlignment: MainAxisAlignment.center,
+                            //     children: [
+                            //       Text(
+                            //         user.status,
+                            //         style: TextStyle(
+                            //           color:
+                            //               user.status == 'Active'
+                            //                   ? AppColors.darkGreenText
+                            //                   : AppColors.red,
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              spacing: 10,
+                              children: [
+                                IconButtonWidget(
+                                  ontap: () {
+                                    // editUserDialogBox(
+                                    //   context: context,
+                                    //   viewModel: viewModel,
+                                    //   userId: user.id,
+                                    //   firstName: user.firstName,
+                                    //   lastName: user.lastName,
+                                    //   phone: user.phone,
+                                    //   email: user.email,
+                                    //   role: user.role,
+                                    //   department: user.department,
+                                    //   status: user.status,
+                                    //   secondaryRole: user.secondaryRole,
+                                    //   vendors: user.vendors,
+                                    //   troubleShooting: user.troubleShooting,
+                                    // );
+                                  },
+                                  icon: Icons.edit_outlined,
+                                  size: 20,
+                                  padding: 5,
+                                ),
+                                IconButtonWidget(
+                                  ontap: () {
+                                    // deleteUserDialogBox(
+                                    //   context: context,
+                                    //   viewModel: viewModel,
+                                    //   userId: user.id,
+                                    // );
+                                  },
+                                  icon: Icons.delete_outline,
+                                  size: 20,
+                                  padding: 5,
+                                ),
+                              ],
+                            ),
+                          ],
                         );
                       }).toList(),
+                    ],
+                  ),
                 );
+                // return Wrap(
+                //   spacing: 10,
+                //   runSpacing: 10,
+                //   children:
+                //       projectsList.map((project) {
+                //         return _buildProjectsRow(
+                //           projectName: project.name,
+                //           projectDescription: project.description,
+                //           onTap: () {
+                //             context.goNamed(
+                //               RouteNames.customerProjectDetailsPage,
+                //               pathParameters: {'projectName': project.name},
+                //             );
+                //           },
+                //         );
+                //       }).toList(),
+                // );
               },
               loadingWidget: LoadingAnimationWidget(),
               emptyWidget: Row(
@@ -656,7 +823,7 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
                             ),
                             _buildCustomDropdown(
                               title: 'Vendor',
-                              selectedValue: viewModel.selectedVendorValue,
+                              selectedValue: viewModel.selectedVendorValue!,
                               selectedValuesList: viewModel.vendorValuesList,
                             ),
                             _buildCustomDropdown(
@@ -864,7 +1031,12 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
       return DropdownWidget(
         title: title,
         items: selectedValuesList,
-        value: selectedValue,
+        value:
+            selectedValuesList.contains(selectedValue)
+                ? selectedValue
+                : (selectedValuesList.isNotEmpty
+                    ? selectedValuesList.first
+                    : 'No Options Available'),
         onChanged: (String? newValue) {
           value.updateDropDownValue(
             selectedValue: selectedValue,
@@ -875,4 +1047,33 @@ class _CustomerDashboardPageState extends State<CustomerDashboardPage> {
       );
     },
   );
+
+  // Column Text
+  Widget _buildTableColumnText({required title}) => Padding(
+    padding: EdgeInsets.all(10),
+    child: Text(
+      title,
+      textAlign: TextAlign.center,
+      style: TextStyle(color: AppColors.lightGreenText, fontSize: 15),
+    ),
+  );
+
+  // Row Text
+  Widget _buildTableRowText({required title, required String projectId}) =>
+      GestureDetector(
+        onTap: () {
+          context.goNamed(
+            RouteNames.customerProjectDetailsPage,
+            queryParameters: {'projectId': projectId},
+          );
+        },
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 13),
+          ),
+        ),
+      );
 }

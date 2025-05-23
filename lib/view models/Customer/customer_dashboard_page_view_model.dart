@@ -9,21 +9,29 @@ import 'package:sws_crm_v5/widgets/popup_message_widget.dart';
 class CustomerDashboardPageViewModel with ChangeNotifier {
   List<DropdownModel> allDropdowns = [];
 
+  CustomersListModel? customerDetails;
+
   String selectedContinueValue = 'No';
   List<String> continueValuesList = ['No', 'Yes'];
 
   String selectedCustomerNameValue = 'Barbara Darling';
   List<String> customerNameValuesList = ['Barbara Darling', 'Mark Fisher'];
+
   String? selectedBranchNameValue;
   List<String> branchNameValuesList = [];
-  String selectedVendorValue = 'Barbara Darling';
-  List<String> vendorValuesList = ['Barbara Darling', 'Mark Fisher'];
+
+  String? selectedVendorValue;
+  List<String> vendorValuesList = [];
+
   String selectedSalesRepValue = 'Barbara Darling';
   List<String> salesRepValuesList = ['Barbara Darling', 'Mark Fisher'];
+
   String selectedProjectTypeValue = 'Barbara Darling';
   List<String> projectTypeValuesList = ['Barbara Darling', 'Mark Fisher'];
-  String selectedExistingSystemValue = 'Barbara Darling';
-  List<String> existingSystemValuesList = ['Barbara Darling', 'Mark Fisher'];
+
+  String selectedExistingSystemValue = 'No';
+  List<String> existingSystemValuesList = ['No', 'Yes'];
+
   String selectedProjectManagerValue = 'Barbara Darling';
   List<String> projectManagerValuesList = ['Barbara Darling', 'Mark Fisher'];
   String selectedProjectManagerVAValue = 'Barbara Darling';
@@ -225,6 +233,12 @@ class CustomerDashboardPageViewModel with ChangeNotifier {
         setSelected: (value) => selectedBranchNameValue = value,
       );
 
+      assignDropdown(
+        type: 'Vendor',
+        setList: (list) => vendorValuesList = list,
+        setSelected: (value) => selectedVendorValue = value,
+      );
+
       notifyListeners();
     } catch (e) {
       NotificationService.show(
@@ -252,5 +266,26 @@ class CustomerDashboardPageViewModel with ChangeNotifier {
     final items = getDropdowns(type);
     setList(items);
     setSelected(items.isNotEmpty ? items.first : null);
+  }
+
+  // Fetch customer details
+  Future<void> fetchSpecificCustomerDetails({
+    required String customerId,
+  }) async {
+    try {
+      final documentSnapshot =
+          await FirebaseFirestore.instance
+              .collection(FirestoreVariables.customersCollection)
+              .doc(customerId)
+              .get();
+
+      if (documentSnapshot.exists && documentSnapshot.data() != null) {
+        customerDetails = CustomersListModel.fromJson(documentSnapshot);
+      } else {
+        debugPrint('No customer found for ID: $customerId');
+      }
+    } catch (error) {
+      debugPrint('Error fetching customer details: $error');
+    }
   }
 }

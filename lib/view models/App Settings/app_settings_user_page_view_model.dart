@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
+import 'package:sws_crm_v5/models/add_user_model.dart';
 import 'package:sws_crm_v5/models/user_model.dart';
 import 'package:sws_crm_v5/utils/firestore_variables.dart';
 import 'package:sws_crm_v5/widgets/popup_message_widget.dart';
@@ -7,12 +8,14 @@ import 'package:sws_crm_v5/widgets/popup_message_widget.dart';
 class AppSettingsUserPageViewModel with ChangeNotifier {
   List<UserModel> allUsersList = [];
   List<UserModel> filteredUsersList = [];
-  final roleValuesList = [
+  String selectedRoleValue = 'Finance Manager';
+  String selectedStatusValue = 'Active';
+  List<String> roleValuesList = [
     'Finance Manager',
     'Production Manager',
     'Super Admin',
   ];
-  final statusValuesList = ['Active', 'Inactive'];
+  List<String> statusValuesList = ['Active', 'Inactive'];
   Future<void> createUser({
     required BuildContext context,
     required BuildContext dialogBoxContext,
@@ -24,7 +27,7 @@ class AppSettingsUserPageViewModel with ChangeNotifier {
     required String status,
   }) async {
     try {
-      final UserModel newUserData = UserModel(
+      final AddUserModel newUserData = AddUserModel(
         firstName: firstName,
         lastName: lastName,
         email: email,
@@ -92,8 +95,10 @@ class AppSettingsUserPageViewModel with ChangeNotifier {
         (fetchedList) =>
             fetchedList.docs
                 .map(
-                  (doc) =>
-                      UserModel.fromJson(doc.data() as Map<String, dynamic>),
+                  (doc) => UserModel.fromJson(
+                    data: doc.data() as Map<String, dynamic>,
+                    userId: doc.id,
+                  ),
                 )
                 .toList(),
       );
@@ -105,6 +110,64 @@ class AppSettingsUserPageViewModel with ChangeNotifier {
         type: NotificationType.error,
       );
       return const Stream.empty();
+    }
+  }
+
+  // Edit customer
+  Future<void> editUser({
+    required BuildContext parentContext,
+    required BuildContext dialogBoxContext,
+    required String userId,
+    required Map<String, dynamic> userDetails,
+  }) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection(FirestoreVariables.usersCollection)
+          .doc(userId)
+          .update(userDetails);
+
+      Navigator.of(dialogBoxContext).pop();
+
+      NotificationService.show(
+        parentContext,
+        message: 'User Successfully Updated',
+        type: NotificationType.success,
+      );
+    } catch (error) {
+      Navigator.of(dialogBoxContext).pop();
+      NotificationService.show(
+        parentContext,
+        message: 'Error Updating User',
+        type: NotificationType.error,
+      );
+    }
+  }
+
+  // Delete user
+  Future<void> deleteUser({
+    required BuildContext parentContext,
+    required BuildContext dialogBoxContext,
+    required String userId,
+  }) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection(FirestoreVariables.usersCollection)
+          .doc(userId)
+          .delete();
+      Navigator.of(dialogBoxContext).pop();
+
+      NotificationService.show(
+        parentContext,
+        message: 'User Successfully Deleted',
+        type: NotificationType.success,
+      );
+    } catch (error) {
+      Navigator.of(dialogBoxContext).pop();
+      NotificationService.show(
+        parentContext,
+        message: 'Error Deleting User',
+        type: NotificationType.error,
+      );
     }
   }
 
